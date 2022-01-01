@@ -26,7 +26,7 @@ public:
         return next;
     }
 
-    NodeHT<T>* getpre()
+    NodeHT<T>* getPre()
     {
         return pre;
     }
