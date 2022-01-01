@@ -11,17 +11,19 @@ class Node {
     T data;
     T sum_subtree;
     T levels_sum;
-    int scale;
-    int* score_arr;
-    int* score_subtree;
+    //int scale;
+    //int* score_arr;
+    //int* score_subtree;
     Node<T, C>* parent;
     Node<T, C>* right;
     Node<T, C>* left;
     int h;
 
 public:
-    Node(T data, C key, int scale) : key(key), data(data), sum_subtree(data), levels_sum(data*key), scale(scale), parent(nullptr),
-    right(nullptr), left(nullptr), h(0) {
+    Node(T data, C key) : key(key), data(data), parent(nullptr), sum_subtree(data), levels_sum(data*key),
+    right(nullptr), left(nullptr), h(0) {/*
+         scale(scale),
+        , levels_sum(data*key),
         score_arr = new int [scale];
         score_subtree = new int [scale];
         for (int i=0;i<scale;i++)
@@ -29,12 +31,13 @@ public:
             score_arr[i] = 0;
             score_subtree[i] = 0;
         }
+        */
     }
 
-    ~Node(){
-        delete[] score_arr;
-        delete[] score_subtree;
-    }
+    ~Node()
+        /*delete[] score_arr;
+        delete[] score_subtree;*/
+     = default;
 
     void setKey(C key) {
         this->key = key;
@@ -172,6 +175,7 @@ public:
     {
         levels_sum = new_sum;
     }
+    /*
     int getScale(){
         return scale;
     }
@@ -188,6 +192,7 @@ public:
     {
         score_subtree[i]=new_score;
     }
+     */
 };
 
 static int max(int a, int b) {
@@ -212,6 +217,7 @@ static void setNodeHeight(Node<T, C>* node) {
             node->setHeight(1 + max(getNodeHeight(node->getLeft()), getNodeHeight(node->getRight())));
     }
 }
+/*
 template<class T, class C>
 static int getScoreSubCell(Node<T, C>* node, int i)
 {
@@ -219,18 +225,20 @@ static int getScoreSubCell(Node<T, C>* node, int i)
         return 0;
     return node->score_arr[i];
 }
+  */
 template<class T, class C>
 static int getSum(Node<T, C>* node){
     if (node==nullptr)
         return 0;
     return node->getSum();
 }
+
 template<class T, class C>
 static T getLevelSum(Node<T, C>* node)
 {
     if (node== nullptr)
         return 0;
-    return node->levels_sum;
+    return node->getLevelSum();
 }
 
 template<class T, class C>
@@ -278,6 +286,7 @@ public:
     NodePtr getRoot();
 
     void updateRanks(NodePtr node);
+    void updateRanksIteration(NodePtr node);
 };
 
 template<class T, class C>
@@ -360,7 +369,7 @@ int Avltree<T, C>::insert(NodePtr node) {
     node->setHeight(0);
     iterator = node;
     //updating ranks:
-    updateRanks(node);
+    updateRanksIteration(node);
     //balancing:
     iterator = node;
     while (iterator != root) {
@@ -379,27 +388,36 @@ int Avltree<T, C>::insert(NodePtr node) {
     return 1;
 }
 template<class T, class C>
-void Avltree<T, C>::updateRanks(Node<T, C>* node){
-    int scale = node->getScale();
+void Avltree<T, C>::updateRanksIteration(Node<T, C>* node){
     Node<T, C>* iterator = node;
     while(iterator!=nullptr)
     {
-        int new_score = 0;
-        int new_sum=0;
-        int new_levels=0;
-        //updating arr:
-        for (int i=0;i<scale;i++)
-        {
-            new_score += getScoreSubCell(iterator->getLeft(), i) + getScoreSubCell(iterator->getRight(), i) + iterator->getScoreCell(i);
-            iterator->changeScoreSuBCell(i, new_score);
-        }
-        //updating sum:
-        new_sum += getSum(iterator->getLeft()) + getSum(iterator->getRight()) + iterator->getData();
-        iterator->setSum(new_sum);
-        //updating levels_sum:
-        new_levels += getLevelSum(iterator->getLeft()) +getLevelSum(iterator->getRight()) + iterator->getLevelSum();
-        iterator->setLevelSum(new_levels);
+        updateRanks(iterator);
+        iterator = iterator->getParent();
+
+        /*
+       int new_sum=0;
+       int new_levels=0;
+
+       int new_score = 0;
+
+
+       //updating arr:
+       for (int i=0;i<scale;i++)
+       {
+           new_score += getScoreSubCell(iterator->getLeft(), i) + getScoreSubCell(iterator->getRight(), i) + iterator->getScoreCell(i);
+           iterator->changeScoreSuBCell(i, new_score);
+       }
+        */
+
     }
+
+}
+template<class T, class C>
+void Avltree<T, C>::updateRanks(Node<T, C>* node)
+{
+    node->setLevelSum(getLevelSum(node->getLeft()) + getLevelSum(node->getRight()) + (node->getData()*node->getKey()));
+    node->setSum(getSum(node->getLeft()) + getSum(node->getRight()) + node->getData());
 
 }
 
@@ -448,6 +466,8 @@ void Avltree<T, C>::llRoll(NodePtr node) {
     //updating heights:
     setNodeHeight(node);
     setNodeHeight(temp);
+    updateRanks(node);
+    updateRanks(temp);
 }
 
 template<class T, class C>
@@ -478,6 +498,9 @@ void Avltree<T, C>::lrRoll(NodePtr node) {
     setNodeHeight(node);
     setNodeHeight(temp1);
     setNodeHeight(temp2);
+    updateRanks(node);
+    updateRanks(temp1);
+    updateRanks(temp2);
 
 }
 
@@ -505,6 +528,8 @@ void Avltree<T, C>::rrRoll(NodePtr node) {
     else
         node->setHeight(1 + max(getNodeHeight(node->getLeft()), getNodeHeight(node->getLeft())));
     temp->setHeight(1 + max(getNodeHeight(temp->getLeft()), getNodeHeight(temp->getRight())));
+    updateRanks(node);
+    updateRanks(temp);
 }
 
 template<class T, class C>
@@ -536,6 +561,9 @@ void Avltree<T, C>::rlRoll(NodePtr node) {
     setNodeHeight(node);
     setNodeHeight(temp1);
     setNodeHeight(temp2);
+    updateRanks(node);
+    updateRanks(temp1);
+    updateRanks(temp2);
 }
 
 template<class T, class C>
