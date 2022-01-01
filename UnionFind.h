@@ -37,12 +37,12 @@ public:
     int num_elements;
     int *parents;
     int *size;
-    NodeUF<T>* groups;
+    NodeUF<T>** groups ;
 
      UnionFind(int num): num_elements(num){
         parents= new int[num+1];
         size= new int[num+1];
-        groups= new NodeUF<T>[num+1];
+        groups= new NodeUF<T>*[num+1];
         for(int i=1;i<num+1;i++)
         {
             parents[i]=-1;
@@ -60,7 +60,7 @@ public:
 
 template<class T>
 void UnionFind<T>::makeSet(T data, int id) {
-    groups[id]=NodeUF<T>(data);
+    groups[id]=new NodeUF<T>(data);
     size[id]=1;
 }
 
@@ -79,7 +79,7 @@ int UnionFind<T>::find(int id) {
         parents[cur_num]=parent_num;
         cur_num=id;
     }
-    return parent_num;
+    return groups[parent_num]->getData();
 }
 
 template<class T>
