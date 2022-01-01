@@ -49,6 +49,7 @@ class HashTables {
     int m;
     NodeHT<T>** chain;
 public:
+    HashTables(): m(0){};
     HashTables(int m): m(m){
         chain = new NodeHT<T>*[m];
         for (int i = 0; i < m; ++i) {

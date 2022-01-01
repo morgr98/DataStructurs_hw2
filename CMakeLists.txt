@@ -7,4 +7,5 @@ include_directories(.)
 
 add_executable(DataStructurs_hw2
         UnionFind.cpp
-        UnionFind.h main1.cpp HashTables.h HashTables.cpp)
+        UnionFind.h main1.cpp HashTables.h HashTables.cpp Player.cpp Player.h
+        GameSystem.cpp GameSystem.h Group.cpp Group.h)

@@ -7,7 +7,7 @@ template<class T>
 class NodeUF{
     T data;
     int size;
-   // Avltree<int ,int> levels_tree;
+    Avltree<int ,int> levels_tree;
 public:
     NodeUF(T data): data(data),size(1){};
 
@@ -38,7 +38,7 @@ public:
     int *parents;
     int *size;
     NodeUF<T>** groups ;
-
+    UnionFind()=default;
      UnionFind(int num): num_elements(num){
         parents= new int[num+1];
         size= new int[num+1];
@@ -79,7 +79,7 @@ int UnionFind<T>::find(int id) {
         parents[cur_num]=parent_num;
         cur_num=id;
     }
-    return groups[parent_num]->getData();
+    return parent_num;
 }
 
 template<class T>

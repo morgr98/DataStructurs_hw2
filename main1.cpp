@@ -6,6 +6,8 @@
 #include <iostream>
 #include "UnionFind.h"
 #include "HashTables.h"
+#include "GameSystem.h"
+#include "library2.h"
 using namespace std;
 
 int main(int argc, const char**argv){
@@ -29,6 +31,12 @@ int main(int argc, const char**argv){
     cout<<hs.member(12)<<endl;
     cout<<hs.member(13)<<endl;
     cout<<hs.member(15)<<endl;
+    cout<<"!!!"<<endl;
+    GameSystem gm(5,100);
+    for (int i = 1; i < 5; ++i) {
+
+        cout<<gm.getA().groups[i]->getData().getGroupId()<<endl;
+    }
 
 
 
