@@ -10,10 +10,11 @@ StatusType GameSystem::addPlayer(int PlayerID, int GroupID, int score) {
     {
         return FAILURE;
     }
-    num_of_player++;
+    num_of_players++;
     Player new_player(PlayerID,score,GroupID);
     players.insert(new_player,PlayerID);
-    //Group group= groups.find(GroupID);
+    players_at_zero++;
+    //Group* group = groups.find(GroupID);
 
 
 
