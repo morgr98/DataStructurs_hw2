@@ -11,7 +11,7 @@
 using namespace std;
 
 int main(int argc, const char**argv){
-    /*
+
     UnionFind<int> uf(5);
     uf.makeSet(1,1);
     uf.makeSet(2,2);
@@ -19,7 +19,7 @@ int main(int argc, const char**argv){
     uf.Union(1,2);
     cout<<uf.find(1)<<endl;
 
-    HashTables<int> hs(10);
+    HashTables<int> hs(2);
     hs.insert(1,1);
     hs.insert(2,2);
     hs.insert(1,11);
@@ -27,18 +27,22 @@ int main(int argc, const char**argv){
     hs.insert(1,3);
     hs.insert(1,13);
     hs.remove(13);
+    hs.remove(3);
+    hs.remove(12);
     cout<<hs.member(1)<<endl;
     cout<<hs.member(11)<<endl;
     cout<<hs.member(12)<<endl;
     cout<<hs.member(13)<<endl;
     cout<<hs.member(15)<<endl;
     cout<<"!!!"<<endl;
+    /*
     GameSystem gm(5,100);
     for (int i = 1; i < 5; ++i) {
 
         cout<<gm.getA().groups[i]->getData().getGroupId()<<endl;
     }
      */
+    /*
     Avltree<int, int> tree;
     Node<int, int> node_1(1,1);
     Node<int, int> node_2(2,2);
@@ -110,7 +114,7 @@ int main(int argc, const char**argv){
     tree.insert(node_4);
     tree.insert(node_8);
     tree.insert(node_11);
-*/
+
 //testing rl
     tree.insert(&node_5);
     tree.insert(&node_2);
@@ -126,20 +130,16 @@ int main(int argc, const char**argv){
     tree.insert(&node_11);
 
     int arr[12];
-    /*tree.inorder(tree.getRoot(), arr, 0);
+    tree.inorder(tree.getRoot(), arr, 0);
     for (int i = 0; i < 12; i++) {
         cout << arr[i] << endl;
     }
-     */
     tree.remove(&node_1);
-    /*
     tree.inorder(tree.getRoot(), arr, 0);
     cout << "second loop" << endl;
     for (int i = 0; i < 11; i++) {
         cout << arr[i] << endl;
     }
-     */
-
-
+    */
     return 0;
 };

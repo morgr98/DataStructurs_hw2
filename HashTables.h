@@ -51,10 +51,11 @@ class HashTables {
     int curr_size;
     double top_threshold;
     double bottom_threshold;
+    int min_size;
     NodeHT<T>** chain;
 public:
-    HashTables(): arr_size(DEFAULT_SIZE), m(DEFAULT_SIZE+1){};
-    HashTables(int arr_size): arr_size(arr_size), m(arr_size+1){
+    HashTables(): arr_size(DEFAULT_SIZE), min_size(DEFAULT_SIZE), m(DEFAULT_SIZE-1){};
+    HashTables(int arr_size): arr_size(arr_size), min_size(arr_size), m(arr_size-1){
         top_threshold = 1;
         bottom_threshold = 0.5;
         chain = new NodeHT<T>*[arr_size];
@@ -68,8 +69,7 @@ public:
     bool member(int key);
     void insert(T data, int key);
     void remove(int key);
-    void increaseSize();
-    void reduceSize();
+    void changeSize(bool increase);
 };
 
 template<class T>
@@ -111,7 +111,7 @@ void HashTables<T>::insert(T data, int key) {
     }
     curr_size++;
     if ((double(curr_size)/arr_size)>=1)
-        increaseSize();
+        changeSize(true);
 }
 
 template<class T>
@@ -132,49 +132,42 @@ void HashTables<T>::remove(int key) {
     }
     delete nodeHt;
     curr_size--;
-    if ((double(curr_size)/arr_size)<=bottom_threshold)
-        reduceSize();
+    if ((double(curr_size)/arr_size)<=bottom_threshold && arr_size/2>=min_size)
+        changeSize(false);
 }
 
 template<class T>
-void HashTables<T>::increaseSize()
+void HashTables<T>::changeSize(bool increase)
 {
     int old_size = arr_size;
-    arr_size = arr_size*2;
+    if (increase)
+        arr_size = arr_size * 2;
+    else
+        arr_size = arr_size/2;
     NodeHT<T>** old_chain = chain;
     chain = new NodeHT<T>*[arr_size];
-    m = arr_size+1;
+    m = arr_size-1;
+    for (int i=0;i<arr_size;i++)
+    {
+        chain[i] = nullptr;
+    }
+    curr_size = 0;
     for (int i=0;i<old_size;i++)
     {
-        NodeHT<T>* temp=old_chain[i];
-        while (temp!=nullptr)
+        NodeHT<T>* dummy_node=old_chain[i];
+        if (dummy_node==nullptr)
+            continue;
+        NodeHT<T>* iterator = dummy_node->getNext();
+        while (iterator!=nullptr)
         {
-            NodeHT<T>* node_to_add = temp;
-            temp=temp->getNext();
-            int h = node_to_add->getKey()%m;
-            NodeHT<T>* nodeHt = chain[h];
-            if(nodeHt == nullptr)
-            {
-                NodeHT<T> *dummy= new NodeHT<T>(data,-1);
-                chain[h]=dummy;
-                dummy->setNext(new_node);
-                new_node->setPre(dummy);
-            }
-            else
-            {
-                while(nodeHt->getNext()!= nullptr)
-                {
-                    nodeHt=nodeHt->getNext();
-                }
-                nodeHt->setNext(new_node);
-                new_node->setPre(nodeHt);
-            }
-            int h = temp->getKey()%m;
-            chain
-            temp=temp->getNext();
+            NodeHT<T>* node_to_add = iterator;
+            insert(node_to_add->getData(), node_to_add->getKey());
+            iterator=iterator->getNext();
+            delete node_to_add;
         }
+        delete dummy_node;
     }
-
+    delete[] old_chain;
 }
 
 #endif //DATASTRUCTURS_HW2_HASHTABLES_H
