@@ -14,9 +14,7 @@ StatusType GameSystem::addPlayer(int PlayerID, int GroupID, int score) {
     Player new_player(PlayerID,score,GroupID);
     players.insert(new_player,PlayerID);
     players_at_zero++;
-    int group_index = groups.find(GroupID);
-
-
+   // int group_index = groups.find(GroupID);
 
     return  SUCCESS;
 }

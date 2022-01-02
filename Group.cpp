@@ -23,6 +23,6 @@ void Group::Merge(Group& other_group)
 {
     num_of_players = num_of_players+other_group.getNumPlayers();
     players_at_zero = players_at_zero + other_group.getPlayersAtZero();
-    //levels_tree->Merge(other_group.getPlayersTree());
+    levels_tree.Merge(other_group.levels_tree);
 }
 

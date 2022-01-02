@@ -63,7 +63,6 @@ public:
         return &(this->data);
     }
 
-
     void setHeight(int h) {
         this->h = h;
     }
@@ -267,7 +266,7 @@ public:
     void makeATree(NodePtr datas [], int start, int end);
     NodePtr buildATree(NodePtr datas [], int start, int end);
 
-    int inorder(T order[], int count, int n);
+    int inorder(NodePtr root,NodePtr order [], int count, int n);
     int preorder(NodePtr root, NodePtr order[], int count);
 
     int inorderKeys(NodePtr root, C** order, int count);
@@ -350,6 +349,7 @@ int Avltree<T, C>::insert(T data, C key) {
     Node<T,C>* node = new Node<T,C>(data, key);
     if (root == nullptr) {
         root = node;
+        size++;
         return 1;
     }
     if (this->findKey(node->getKey()) != nullptr)
@@ -580,7 +580,7 @@ void Avltree<T, C>::rlRoll(NodePtr node) {
 }
 
 template<class T, class C>
-int Avltree<T, C>::inorder(T* order, int count, int n) {
+int Avltree<T, C>::inorder(NodePtr root,NodePtr order [] , int count, int n) {
     if (!root || count==n) {
         return 0;
     }
@@ -799,9 +799,15 @@ void Avltree<T,C>::Merge(Avltree<T,C>& other)
     int size1 = size;
     int size2 = other.getSize();
     int final_size = 0;
+
     Node<T,C>** tree_nodes = new Node<T,C>*[size1];
     Node<T,C>** other_nodes = new Node<T,C>*[size2];
     Node<T,C>** new_tree_arr = new Node<T,C>*[size1+size2];
+
+    //T* tree_datas= new T[size1];
+    //T* other_tree= new T[size2];
+    inorder(this->root,tree_nodes,0,size1);
+    inorder(other.root ,other_nodes,0,size2);
     int c1 = 0, c2 = 0;
     while(c1 != size1 && c2 != size2)
     {
@@ -817,7 +823,9 @@ void Avltree<T,C>::Merge(Avltree<T,C>& other)
         else
         {
             new_tree_arr[c1+c2] = tree_nodes[c1];
-            new_tree_arr[c1+c2]->data += other_nodes[c2]->getData();
+            new_tree_arr[c1+c2]->setData(new_tree_arr[c1+c2]->getData()+other_nodes[c2]->getData());
+            c1++;
+            c2++;
         }
     }
     while (c1!=size1)
@@ -829,9 +837,14 @@ void Avltree<T,C>::Merge(Avltree<T,C>& other)
         new_tree_arr[c1 + c2] = other_nodes[c2];
         c2++;
     }
-    for(int i=0;i<final_size;i++)
+    for(int i=0; i<final_size;i++)
     {
+        new_tree_arr[i]->removeTies();
     }
+    makeATree(new_tree_arr,0,final_size);
+    size=final_size;
+    delete [] tree_nodes;
+    delete [] other_nodes;
 }
 
 

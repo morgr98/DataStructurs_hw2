@@ -42,7 +42,7 @@ int main(int argc, const char**argv){
         cout<<gm.getA().groups[i]->getData().getGroupId()<<endl;
     }
      */
-
+/*
     Avltree<int, int> tree;
     tree.insert(1,1);
     tree.insert(2,2);
@@ -66,6 +66,22 @@ int main(int argc, const char**argv){
     tree.insert(12,12);
     tree.insert(30,30);
     tree.insert(31,31);
+*/
+
+    Avltree<int ,int > tree1;
+    Avltree<int, int> tree2;
+    tree1.insert(1,1);
+    tree2.insert(2,2);
+    tree1.insert(3,3);
+    tree2.insert(4,4);
+    tree1.insert(5,5);
+    tree2.insert(6,6);
+    tree1.insert(7,7);
+    tree2.insert(8,8);
+    tree1.insert(9,9);
+
+    tree1.Merge(tree2);
+
 
 //testing rr roll
 /*

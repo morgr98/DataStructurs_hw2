@@ -54,7 +54,7 @@ public:
     ~UnionFind()=default;
 
     void makeSet(T data, int id);
-    int find(int id);
+    T find(int id);
     void Union(int id1, int id2);
 };
 
@@ -66,7 +66,7 @@ void UnionFind<T>::makeSet(T data, int id) {
 
 
 template<class T>
-int UnionFind<T>::find(int id) {
+T UnionFind<T>::find(int id) {
     int parent_num=id, cur_num=id;
     while (parents[parent_num]!=-1)
     {
@@ -79,7 +79,7 @@ int UnionFind<T>::find(int id) {
         parents[cur_num]=parent_num;
         cur_num=id;
     }
-    return parent_num;
+    return groups[parent_num]->getData();
 }
 
 template<class T>
@@ -89,13 +89,13 @@ void UnionFind<T>::Union(int id1, int id2) {
     {
         parents[id2]=id1;
         size[id1]+=size[id2];
-        //groups[id1]->Merge(groups[id2]);
+       // groups[id1]->getData().Merge(groups[id2]->getData());
     }
     else
     {
         parents[id1]=id2;
         size[id2]+=size[id1];
-        //groups[id2]->Merge(groups[id1]);
+       // groups[id2]->getData().Merge(groups[id1]->getData());
     }
 }
 
