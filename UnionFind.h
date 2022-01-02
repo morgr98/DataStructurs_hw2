@@ -89,13 +89,13 @@ void UnionFind<T>::Union(int id1, int id2) {
     {
         parents[id2]=id1;
         size[id1]+=size[id2];
-        groups[id2]=groups[id1];
+        //groups[id1]->Merge(groups[id2]);
     }
     else
     {
         parents[id1]=id2;
         size[id2]+=size[id1];
-        groups[id1]=groups[id2];
+        //groups[id2]->Merge(groups[id1]);
     }
 }
 

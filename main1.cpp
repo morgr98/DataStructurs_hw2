@@ -42,30 +42,30 @@ int main(int argc, const char**argv){
         cout<<gm.getA().groups[i]->getData().getGroupId()<<endl;
     }
      */
-    /*
+
     Avltree<int, int> tree;
-    Node<int, int> node_1(1,1);
-    Node<int, int> node_2(2,2);
-    Node<int, int> node_3(3,3);
-    Node<int, int> node_4(4,4);
-    Node<int, int> node_5(5,5);
-    Node<int, int> node_6(6,6);
-    Node<int, int> node_7(7,7);
-    Node<int, int> node_8(8,8);
-    Node<int, int> node_9(9,9);
-    Node<int, int> node_11(11,11);
-    Node<int, int> node_15(15,15);
-    Node<int, int> node_10(10,10);
-    Node<int, int> node_14(14,14);
-    Node<int, int> node_24(24, 24);
-    Node<int, int> node_13(13,13);
-    Node<int, int> node_20(20,20);
-    Node<int, int> node_29(29,29);
-    Node<int, int> node_19(19,19);
-    Node<int, int> node_18(18,18);
-    Node<int, int> node_12(12,12);
-    Node<int, int> node_30(30,30);
-    Node<int, int> node_31(31,31);
+    tree.insert(1,1);
+    tree.insert(2,2);
+    tree.insert(3,3);
+    tree.insert(4,4);
+    tree.insert(5,5);
+    tree.insert(6,6);
+    tree.insert(7,7);
+    tree.insert(8,8);
+    tree.insert(9,9);
+    tree.insert(11,11);
+    tree.insert(15,15);
+    tree.insert(10,10);
+    tree.insert(14,14);
+    tree.insert(24, 24);
+    tree.insert(13,13);
+    tree.insert(20,20);
+    tree.insert(29,29);
+    tree.insert(19,19);
+    tree.insert(18,18);
+    tree.insert(12,12);
+    tree.insert(30,30);
+    tree.insert(31,31);
 
 //testing rr roll
 /*
@@ -114,21 +114,9 @@ int main(int argc, const char**argv){
     tree.insert(node_4);
     tree.insert(node_8);
     tree.insert(node_11);
-
+*/
 //testing rl
-    tree.insert(&node_5);
-    tree.insert(&node_2);
-    tree.insert(&node_8);
-    tree.insert(&node_1);
-    tree.insert(&node_4);
-    tree.insert(&node_10);
-    tree.insert(&node_6);
-    tree.insert(&node_3);
-    tree.insert(&node_7);
-    tree.insert(&node_9);
-    tree.insert(&node_12);
-    tree.insert(&node_11);
-
+/*
     int arr[12];
     tree.inorder(tree.getRoot(), arr, 0);
     for (int i = 0; i < 12; i++) {

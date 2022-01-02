@@ -246,8 +246,9 @@ class Avltree {
 public:
     typedef Node<T, C>* NodePtr;
     NodePtr root;
+    int size;
 
-    Avltree() : root(nullptr) {}
+    Avltree() : root(nullptr), size(0) {}
 
     ~Avltree()=default;
 
@@ -255,9 +256,9 @@ public:
 
     void destroy();
 
-    int insert(NodePtr node);
+    int insert(T data, C key);
 
-    void remove(NodePtr node_to_remove);
+    void remove(C key);
 
     NodePtr removebinary(NodePtr node);
 
@@ -266,7 +267,7 @@ public:
     void makeATree(NodePtr datas [], int start, int end);
     NodePtr buildATree(NodePtr datas [], int start, int end);
 
-    int inorder(NodePtr root, NodePtr order[], int count, int n);
+    int inorder(T order[], int count, int n);
     int preorder(NodePtr root, NodePtr order[], int count);
 
     int inorderKeys(NodePtr root, C** order, int count);
@@ -287,6 +288,12 @@ public:
 
     void updateRanks(NodePtr node);
     void updateRanksIteration(NodePtr node);
+    int getSize()
+    {
+        return size;
+    }
+
+    void Merge(Avltree<T,C>& other);
 };
 
 template<class T, class C>
@@ -339,12 +346,12 @@ Node<T, C>* Avltree<T, C>::findKey(C key) {
 }
 
 template<class T, class C>
-int Avltree<T, C>::insert(NodePtr node) {
+int Avltree<T, C>::insert(T data, C key) {
+    Node<T,C>* node = new Node<T,C>(data, key);
     if (root == nullptr) {
         root = node;
         return 1;
     }
-    C key = node->getKey();
     if (this->findKey(node->getKey()) != nullptr)
         return -1;
     NodePtr iterator = root;
@@ -377,14 +384,20 @@ int Avltree<T, C>::insert(NodePtr node) {
         int it_height = iterator->getHeight();
         int p_height = p->getHeight();
         if (p_height >= it_height + 1)
+        {
+            size++;
             return 1;
+        }
+
         p->setHeight(it_height + 1);
         if (p->getBF() >= 2 || p->getBF() <= -2) {
             roll(p, p->getBF());
+            size++;
             return 1;
         }
         iterator = p;
     }
+    size++;
     return 1;
 }
 template<class T, class C>
@@ -567,7 +580,7 @@ void Avltree<T, C>::rlRoll(NodePtr node) {
 }
 
 template<class T, class C>
-int Avltree<T, C>::inorder(NodePtr root, NodePtr* order, int count, int n) {
+int Avltree<T, C>::inorder(T* order, int count, int n) {
     if (!root || count==n) {
         return 0;
     }
@@ -735,7 +748,10 @@ Node<T, C>* Avltree<T, C>::removebinary(NodePtr node) {
 }
 
 template<class T, class C>
-void Avltree<T, C>::remove(NodePtr node_to_remove) {
+void Avltree<T, C>::remove(C key) {
+    NodePtr node_to_remove = this->findKey(key);
+    if (node_to_remove== nullptr)
+        return;
     NodePtr node = removebinary(node_to_remove);
     if (node != nullptr) {
         roll(node, node->getBF());
@@ -744,6 +760,7 @@ void Avltree<T, C>::remove(NodePtr node_to_remove) {
             roll(node, node->getBF());
         }
     }
+    size--;
 
 }
 
@@ -775,6 +792,46 @@ Node<T, C>* Avltree<T, C>::buildATree(NodePtr *datas, int start, int end) {
         Node_r->getLeft()->setParent(Node_r);
     setNodeHeight(Node_r);
     return Node_r;
+}
+template<class T, class C>
+void Avltree<T,C>::Merge(Avltree<T,C>& other)
+{
+    int size1 = size;
+    int size2 = other.getSize();
+    int final_size = 0;
+    Node<T,C>** tree_nodes = new Node<T,C>*[size1];
+    Node<T,C>** other_nodes = new Node<T,C>*[size2];
+    Node<T,C>** new_tree_arr = new Node<T,C>*[size1+size2];
+    int c1 = 0, c2 = 0;
+    while(c1 != size1 && c2 != size2)
+    {
+        if (tree_nodes[c1]->getKey() > other_nodes[c2]->getKey()) {
+            new_tree_arr[c1 + c2] = other_nodes[c2];
+            c2++;
+            final_size++;
+        } else if (tree_nodes[c1]->getKey() < other_nodes[c2]->getKey()){
+            new_tree_arr[c1 + c2] = tree_nodes[c1];
+            c1++;
+            final_size++;
+        }
+        else
+        {
+            new_tree_arr[c1+c2] = tree_nodes[c1];
+            new_tree_arr[c1+c2]->data += other_nodes[c2]->getData();
+        }
+    }
+    while (c1!=size1)
+    {
+        new_tree_arr[c1 + c2] = tree_nodes[c1];
+        c1++;
+    }
+    while (c2 != size2) {
+        new_tree_arr[c1 + c2] = other_nodes[c2];
+        c2++;
+    }
+    for(int i=0;i<final_size;i++)
+    {
+    }
 }
 
 
