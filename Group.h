@@ -11,10 +11,11 @@ class Group {
     int num_of_players;
     Avltree<int,int> levels_tree;
     HashTables<Player> players;
+    int players_at_zero;
 
 public:
     Group(){};
-    Group(int id): group_id(id), num_of_players(0){};
+    Group(int id): group_id(id), num_of_players(0), players_at_zero(0){};
     ~Group()=default;
     Group(Group& group)=default;
 

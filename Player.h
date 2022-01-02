@@ -10,7 +10,7 @@ class Player {
 public:
     Player(int id, int score, int group_id): player_id(id), score(score), level(0), group_id(group_id){};
     ~Player()=default;
-    Player(Player& player)=default;
+    Player(const Player& player)=default;
 
     int getScore();
     int getLevel();

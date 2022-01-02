@@ -15,9 +15,10 @@ class GameSystem {
     Avltree<int,int> levels_tree;
     int k;
     int scale;
-    int num_of_player;
+    int num_of_players;
+    int players_at_zero;
 public:
-    GameSystem(int k, int scale): k(k), num_of_player(0), scale(scale){
+    GameSystem(int k, int scale): k(k), num_of_players(0), scale(scale), players_at_zero(0){
         groups=UnionFind<Group>(k);
         players=HashTables<Player>(100);
         data_groups= new Group[k+1];
