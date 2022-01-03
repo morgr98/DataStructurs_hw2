@@ -25,10 +25,6 @@ public:
     void addPlayer(Player player, int score_player, int level_player);
     int getGroupId();
     void Merge(Group& other_group);
-
-
-
-
 };
 
 
