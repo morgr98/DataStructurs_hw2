@@ -17,8 +17,9 @@ int main(int argc, const char**argv){
     uf.makeSet(2,2);
     uf.makeSet(3,3);
     uf.Union(1,2);
-    cout<<uf.find(1)<<endl;
+   // cout<<uf.find(1)<<endl;
 */
+/*
     HashTable<int> hs(2);
     hs.insert(1,1);
     hs.insert(2,2);
@@ -68,6 +69,7 @@ int main(int argc, const char**argv){
     tree.insert(31,31);
 
 */
+/*
     Avltree<int ,int > tree1;
     Avltree<int, int> tree2;
     tree1.insert(1,1);
@@ -82,7 +84,7 @@ int main(int argc, const char**argv){
 
     tree1.Merge(tree2);
 
-
+*/
 //testing rr roll
 /*
     tree.insert(&node_12);
@@ -153,7 +155,12 @@ game.addPlayer(3,3,2);
 game.addPlayer(1,1,1);
 game.addPlayer(4,2,2);
 game.addPlayer(5,2,1);
+game.mergeGroups(1,2);
+game.increasePlayerIDLevel(1,1);
+game.increasePlayerIDLevel(2,2);
+game.increasePlayerIDLevel(5,1);
 game.removePlayer(5);
+cout<<"A";
 
 return 0;
 };

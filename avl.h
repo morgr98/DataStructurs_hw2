@@ -284,7 +284,6 @@ public:
     NodePtr findKey(C key);
 
     NodePtr getRoot();
-
     void updateRanks(NodePtr node);
     void updateRanksIteration(NodePtr node);
     int getSize()
@@ -359,6 +358,8 @@ int Avltree<T, C>::insert(T data, C key) {
     if (existing_node != nullptr)
     {
         existing_node->setData(existing_node->getData()+data);
+        updateRanksIteration(existing_node);
+        return 1; ////// ?
     }
     NodePtr iterator = root;
     while (iterator != nullptr) {
@@ -439,6 +440,7 @@ void Avltree<T, C>::updateRanks(Node<T, C>* node)
     node->setSum(getSum(node->getLeft()) + getSum(node->getRight()) + node->getData());
 
 }
+
 
 template<class T, class C>
 void Avltree<T, C>::roll(NodePtr node, int bf) {
@@ -758,12 +760,15 @@ void Avltree<T, C>::remove(C key) {
     NodePtr node_to_remove = this->findKey(key);
     if (node_to_remove== nullptr)
         return;
-    if (node_to_remove->getData()>1)
-        node_to_remove->setData(node_to_remove->getData()--);
+    if (node_to_remove->getData()>1){
+        node_to_remove->setData(node_to_remove->getData()-1);
+        updateRanksIteration(node_to_remove);
+        return; /////
+    }
     NodePtr node = removebinary(node_to_remove);
     if (node != nullptr) {
         roll(node, node->getBF());
-        while (node->getParent() != nullptr) {
+        while (node->getParent() != nullptr) {// need to update the sum ?
             node = node->getParent();
             roll(node, node->getBF());
         }
@@ -787,7 +792,7 @@ void Avltree<T, C>::makeATree(NodePtr *datas, int start, int end)  {
 }
 template<class T,class C>
 Node<T, C>* Avltree<T, C>::buildATree(NodePtr *datas, int start, int end) {
-    if(start>end)
+    if(start>end || end ==0)
         return nullptr;
     int mid=(end+start)/2;
     NodePtr Node_r=datas[mid];

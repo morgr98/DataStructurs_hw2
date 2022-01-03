@@ -25,7 +25,7 @@ public:
         //data_groups= new Group[k+1];
         scale_levels_trees_arr = new Avltree<int,int>[scale];
         for (int i = 1; i <= k; ++i) {
-            Group group(i);
+            Group group(i,scale);
             groups.makeSet(group,i);
             //data_groups[i]=group;
         }
@@ -50,11 +50,12 @@ public:
 
     StatusType removePlayer(int PlayerID);
 
-    UnionFind<Group> getA()
-    {
-        return groups;
-    }
+    StatusType increasePlayerIDLevel(int PlayerID, int LevelIncrease);
 
+    StatusType changePlayerIDScore(int PlayerID, int NewScore);
+
+    StatusType getPercentOfPlayersWithScoreInBounds (int GroupID, int score, int
+    lowerLevel, int higherLevel, double * players);
 
 };
 
