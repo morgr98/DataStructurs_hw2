@@ -66,8 +66,8 @@ int main(int argc, const char**argv){
     tree.insert(12,12);
     tree.insert(30,30);
     tree.insert(31,31);
-*/
 
+*/
     Avltree<int ,int > tree1;
     Avltree<int, int> tree2;
     tree1.insert(1,1);

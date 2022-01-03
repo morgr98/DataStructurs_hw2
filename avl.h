@@ -293,6 +293,9 @@ public:
     }
 
     void Merge(Avltree<T,C>& other);
+
+    void updateTreeRanks();
+    void updateTreeRanksAux(Node<T,C>* node);
 };
 
 template<class T, class C>
@@ -843,9 +846,23 @@ void Avltree<T,C>::Merge(Avltree<T,C>& other)
     }
     makeATree(new_tree_arr,0,final_size);
     size=final_size;
+    this->updateTreeRanks();
     delete [] tree_nodes;
     delete [] other_nodes;
 }
 
+template<class T, class C>
+void Avltree<T,C>::updateTreeRanks() {
+    updateTreeRanksAux(root);
+}
+
+template<class T, class C>
+void Avltree<T,C>::updateTreeRanksAux(Node<T,C>* node) {
+    if (node == nullptr)
+        return;
+    updateTreeRanksAux(node->getLeft());
+    updateTreeRanksAux(node->getRight());
+    updateRanks(node);
+}
 
 #endif
