@@ -19,12 +19,13 @@ public:
     ~Group()=default;
     Group( Group& group)=default;
 
+    int getGroupId();
     int getNumPlayers();
     int getPlayersAtZero();
     Avltree<int,int>* getPlayersTree();
-    void addPlayer(Player player, int score_player, int level_player);
-    int getGroupId();
-    void Merge(Group& other_group);
+    void addPlayer(int level_player);
+    void removePlayer(int level_player);
+    void Merge(Group* other_group);
 };
 
 

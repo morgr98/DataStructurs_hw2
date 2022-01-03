@@ -355,8 +355,11 @@ int Avltree<T, C>::insert(T data, C key) {
         size++;
         return 1;
     }
-    if (this->findKey(node->getKey()) != nullptr)
-        return -1;
+    Node<T,C>* existing_node = this->findKey(node->getKey());
+    if (existing_node != nullptr)
+    {
+        existing_node->setData(existing_node->getData()+data);
+    }
     NodePtr iterator = root;
     while (iterator != nullptr) {
         if (iterator->getKey() < key) {
@@ -755,6 +758,8 @@ void Avltree<T, C>::remove(C key) {
     NodePtr node_to_remove = this->findKey(key);
     if (node_to_remove== nullptr)
         return;
+    if (node_to_remove->getData()>1)
+        node_to_remove->setData(node_to_remove->getData()--);
     NodePtr node = removebinary(node_to_remove);
     if (node != nullptr) {
         roll(node, node->getBF());
@@ -764,7 +769,6 @@ void Avltree<T, C>::remove(C key) {
         }
     }
     size--;
-
 }
 
 template<class T, class C>

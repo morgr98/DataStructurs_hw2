@@ -1,6 +1,6 @@
 
-#ifndef DATASTRUCTURS_HW2_HASHTABLES_H
-#define DATASTRUCTURS_HW2_HASHTABLES_H
+#ifndef DATASTRUCTURS_HW2_HashTable_H
+#define DATASTRUCTURS_HW2_HashTable_H
 
 template<class T>
 class NodeHT{
@@ -45,7 +45,7 @@ public:
 
 const int DEFAULT_SIZE = 101;
 template<class T>
-class HashTables {
+class HashTable {
     int m;
     int arr_size;
     int curr_size;
@@ -54,8 +54,8 @@ class HashTables {
     int min_size;
     NodeHT<T>** chain;
 public:
-    HashTables(): arr_size(DEFAULT_SIZE), min_size(DEFAULT_SIZE), m(DEFAULT_SIZE-1){};
-    HashTables(int arr_size): arr_size(arr_size), min_size(arr_size), m(arr_size-1){
+    HashTable(): arr_size(DEFAULT_SIZE), min_size(DEFAULT_SIZE), m(DEFAULT_SIZE-1){};
+    HashTable(int arr_size): arr_size(arr_size), min_size(arr_size), m(arr_size-1){
         top_threshold = 1;
         bottom_threshold = 0.5;
         chain = new NodeHT<T>*[arr_size];
@@ -63,17 +63,40 @@ public:
             chain[i]= nullptr;
         }
     }
-    ~HashTables()=default;
-    HashTables(HashTables<T>& hashTables)=default;
+    ~HashTable()
+    {
+        this->destroy();
+    }
+    HashTable(HashTable<T>& HashTable)=default;
 
+    void destroy();
     bool member(int key);
+    T find(int key);
     void insert(T data, int key);
     void remove(int key);
     void changeSize(bool increase);
 };
-
 template<class T>
-bool HashTables<T>::member(int key) {
+void HashTable<T>::destroy()
+{
+    for (int i=0;i<arr_size;i++)
+    {
+        NodeHT<T>* dummy_node=chain[i];
+        if (dummy_node==nullptr)
+            continue;
+        NodeHT<T>* iterator = dummy_node->getNext();
+        while (iterator!=nullptr)
+        {
+            NodeHT<T>* node_to_delete = iterator;
+            iterator = iterator->getNext();
+            delete node_to_delete;
+        }
+        delete dummy_node;
+    }
+    //delete[] chain;
+}
+template<class T>
+bool HashTable<T>::member(int key) {
     {
         {
             int h = key % m;
@@ -89,7 +112,23 @@ bool HashTables<T>::member(int key) {
     }
 }
 template<class T>
-void HashTables<T>::insert(T data, int key) {
+T HashTable<T>::find(int key) {
+    {
+        {
+            int h = key % m;
+            NodeHT<T> *nodeHt = chain[h];
+            while (nodeHt != nullptr && nodeHt->getKey() != key) {
+                nodeHt = nodeHt->getNext();
+            }
+            if (nodeHt != nullptr) {
+                return nodeHt->getData();
+            }
+            return nullptr;
+        }
+    }
+}
+template<class T>
+void HashTable<T>::insert(T data, int key) {
     int h=key%m;
     NodeHT<T> *new_node= new NodeHT<T>(data,key);
     NodeHT<T>* nodeHt=chain[h];
@@ -115,7 +154,7 @@ void HashTables<T>::insert(T data, int key) {
 }
 
 template<class T>
-void HashTables<T>::remove(int key) {
+void HashTable<T>::remove(int key) {
     int h=key%m;
     NodeHT<T>* nodeHt=chain[h];
     NodeHT<T>* nodeHt_pre=nodeHt;
@@ -137,7 +176,7 @@ void HashTables<T>::remove(int key) {
 }
 
 template<class T>
-void HashTables<T>::changeSize(bool increase)
+void HashTable<T>::changeSize(bool increase)
 {
     int old_size = arr_size;
     if (increase)
@@ -167,7 +206,7 @@ void HashTables<T>::changeSize(bool increase)
         }
         delete dummy_node;
     }
-    delete[] old_chain;
+    // delete[] old_chain;
 }
 
-#endif //DATASTRUCTURS_HW2_HASHTABLES_H
+#endif //DATASTRUCTURS_HW2_HashTable_H

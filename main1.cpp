@@ -19,7 +19,7 @@ int main(int argc, const char**argv){
     uf.Union(1,2);
     cout<<uf.find(1)<<endl;
 */
-    HashTables<int> hs(2);
+    HashTable<int> hs(2);
     hs.insert(1,1);
     hs.insert(2,2);
     hs.insert(1,11);
@@ -145,5 +145,15 @@ int main(int argc, const char**argv){
         cout << arr[i] << endl;
     }
     */
-    return 0;
+
+GameSystem game = GameSystem(10, 200);
+game.addPlayer(1,1,1);
+game.addPlayer(2,1,1);
+game.addPlayer(3,3,2);
+game.addPlayer(1,1,1);
+game.addPlayer(4,2,2);
+game.addPlayer(5,2,1);
+game.removePlayer(5);
+
+return 0;
 };

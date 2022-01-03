@@ -57,7 +57,7 @@ public:
     ~UnionFind()=default;
 
     void makeSet(T data, int id);
-    T find(int id);
+    T* find(int id);
     void Union(int id1, int id2);
 };
 
@@ -69,7 +69,10 @@ void UnionFind<T>::makeSet(T data, int id) {
 
 
 template<class T>
-T UnionFind<T>::find(int id) {
+T* UnionFind<T>::find(int id) {
+    //what if id doesnt exist?
+    if (id>num_elements)
+        return nullptr;
     int parent_num=id, cur_num=id;
     while (parents[parent_num]!=-1)
     {
@@ -82,11 +85,16 @@ T UnionFind<T>::find(int id) {
         parents[cur_num]=parent_num;
         cur_num=id;
     }
-    return groups[parent_num]->getData();
+    return groups[parent_num]->getDataPtr();
 }
 
 template<class T>
 void UnionFind<T>::Union(int id1, int id2) {
+    //should check first their parent, no? gilad added
+    id1 = find(id1)->getGroupId();
+    id2 = find(id2)->getGroupId();
+    if (id1 == id2)
+        return;
     int size1= size[id1], size2=size[id2];
     if(size1>size2)
     {
@@ -98,7 +106,7 @@ void UnionFind<T>::Union(int id1, int id2) {
     {
         parents[id1]=id2;
         size[id2]+=size[id1];
-        groups[id2]->getDataPtr()->Merge(groups[id1]->getData());
+        groups[id2]->getDataPtr()->Merge(groups[id1]->getDataPtr());
     }
 }
 
