@@ -277,6 +277,10 @@ public:
     NodePtr getRoot();
     void updateRanks(NodePtr node);
     void updateRanksIteration(NodePtr node);
+    void updateTreeRanks();
+    void updateTreeRanksAux(Node<T,C>* node);
+    T getSumInBorder(C key1, C key2);
+
     int getSize()
     {
         return size;
@@ -284,8 +288,7 @@ public:
 
     void Merge(Avltree<T,C>* other);
 
-    void updateTreeRanks();
-    void updateTreeRanksAux(Node<T,C>* node);
+
 };
 
 template<class T, class C>
@@ -858,6 +861,40 @@ void Avltree<T,C>::updateTreeRanksAux(Node<T,C>* node) {
     updateTreeRanksAux(node->getLeft());
     updateTreeRanksAux(node->getRight());
     updateRanks(node);
+}
+
+template<class T, class C>
+T Avltree<T,C>::getSumInBorder(C key1, C key2) {
+    T sum2 = 0;
+    T sum1 = 0;
+    Node<T,C>* iterator = root;
+    while(iterator!=nullptr)
+    {
+        if (iterator->getKey()<=key2)
+        {
+            sum2 = sum2 + iterator->getData();
+            if (iterator->getLeft()!=nullptr)
+                sum2 = sum2 + iterator->getLeft()->getSum();
+            if(iterator->getKey()==key2)
+                break;
+            iterator=iterator->getRight();
+        }
+        iterator=iterator->getLeft();
+    }
+    iterator = root;
+    while(iterator!=nullptr)
+    {
+        if (iterator->getKey()<key1)
+        {
+            sum1 = sum1 + iterator->getData();
+            if (iterator->getLeft()!=nullptr)
+                sum1 = sum1 + iterator->getLeft()->getSum();
+            iterator=iterator->getRight();
+        }
+        iterator=iterator->getLeft();
+    }
+    return sum2-sum1;
+
 }
 
 #endif

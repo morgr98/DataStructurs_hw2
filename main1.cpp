@@ -160,6 +160,11 @@ game.increasePlayerIDLevel(1,1);
 game.increasePlayerIDLevel(2,2);
 game.increasePlayerIDLevel(5,1);
 game.removePlayer(5);
+double percent = 0;
+game.getPercentOfPlayersWithScoreInBounds(0,1,0,1,&percent);
+cout<<percent<<endl;
+game.getPercentOfPlayersWithScoreInBounds(1,1,0,1,&percent);
+cout<<percent<<endl;
 
 return 0;
 };

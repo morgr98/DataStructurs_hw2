@@ -29,6 +29,7 @@ StatusType GameSystem::addPlayer(int PlayerID, int GroupID, int score) {
     }
     players->insert(new_player,PlayerID);
     players_at_zero++;
+    score_of_players_at_zero[score]++;
     std::shared_ptr<Group> group = groups->find(GroupID);
     group->addPlayer(0,score);
     return SUCCESS;
@@ -45,9 +46,13 @@ StatusType GameSystem::removePlayer(int PlayerID) {
         return FAILURE;
     }
     std::shared_ptr<Group> group = groups->find(player_to_remove->getGroupId());
-    group->removePlayer(level,player_to_remove->getScore());
+    group->removePlayer(level,score);
     if (level==0)
+    {
         players_at_zero--;
+        score_of_players_at_zero[score]--;
+    }
+
     else
     {
         levels_tree->remove(level);
@@ -67,10 +72,10 @@ StatusType GameSystem::increasePlayerIDLevel(int PlayerID, int LevelIncrease) {
     }
     std::shared_ptr<Player> player= players->find(PlayerID);
     int old_level = player->getLevel();
+    int score = player->getScore();
     player->increaseLevel(LevelIncrease);
     std::shared_ptr<Group> group= groups->find(player->getGroupId());
     group->increasePlayerLevel(old_level,player->getLevel(),player->getScore());
-
     if(old_level!=0)
     {
         scale_levels_trees_arr[player->getScore()]->remove(old_level);
@@ -78,6 +83,7 @@ StatusType GameSystem::increasePlayerIDLevel(int PlayerID, int LevelIncrease) {
     }
     else{
         players_at_zero--;
+        score_of_players_at_zero[score]--;
     }
     scale_levels_trees_arr[player->getScore()]->insert(1,player->getLevel());
     levels_tree->insert(1,player->getLevel());
@@ -96,9 +102,43 @@ StatusType GameSystem::changePlayerIDScore(int PlayerID, int NewScore) {
     std::shared_ptr<Player> player= players->find(PlayerID);
     //Group* group= groups.find(player->getGroupId());
     int old_score= player->getScore();
+    int level = player->getLevel();
     player->updateScore(NewScore);
-    scale_levels_trees_arr[old_score]->remove(player->getLevel());
-    scale_levels_trees_arr[NewScore]->insert(1,player->getLevel());
+    if(level==0)
+    {
+        score_of_players_at_zero[old_score]--;
+        score_of_players_at_zero[NewScore]++;
+    }
+    else
+    {
+        scale_levels_trees_arr[old_score]->remove(player->getLevel());
+        scale_levels_trees_arr[NewScore]->insert(1,player->getLevel());
+    }
     return SUCCESS;
 }
 
+StatusType GameSystem::getPercentOfPlayersWithScoreInBounds(int GroupID, int score, int lowerLevel, int higherLevel,
+                                                            double *players)
+{
+    if(GroupID<0||GroupID>k||players==nullptr)
+        return INVALID_INPUT;
+    int num_of_players_with_score=0;
+    int all_of_players=0;
+    if (GroupID==0)
+    {
+        Avltree<int,int>* tree = scale_levels_trees_arr[score];
+        num_of_players_with_score = tree->getSumInBorder(lowerLevel, higherLevel);
+        all_of_players= levels_tree->getSumInBorder(lowerLevel, higherLevel);
+        if(all_of_players==0)
+            return FAILURE;
+        if(lowerLevel==0)
+        {
+            num_of_players_with_score+=score_of_players_at_zero[score];
+            all_of_players+=players_at_zero;
+        }
+        *players = (double(num_of_players_with_score)/all_of_players)*100;
+        return SUCCESS;
+    }
+    std::shared_ptr<Group> group = groups->find(GroupID);
+    return group->getPercentOfPlayersWithScoreInBounds(score, lowerLevel, higherLevel, players);
+}

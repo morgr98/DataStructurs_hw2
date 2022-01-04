@@ -14,6 +14,7 @@ class GameSystem {
     HashTable<std::shared_ptr<Player>>* players;
     Avltree<int,int>* levels_tree;
     Avltree<int,int>** scale_levels_trees_arr;
+    int* score_of_players_at_zero;
     int k;
     int scale;
     int num_of_players;
@@ -34,6 +35,11 @@ public:
             group = std::make_shared<Group>(i,scale);
             groups->makeSet(std::move(group),i);
             //data_groups[i]=group;
+        }
+        score_of_players_at_zero = new int[scale+1];
+        for (int i=0;i<scale+1;i++)
+        {
+            score_of_players_at_zero[i]=0;
         }
     }
     /*GameSystem(GameSystem& other) = default;
@@ -58,6 +64,7 @@ public:
             delete scale_levels_trees_arr[i];
         }
         delete[] scale_levels_trees_arr;
+        delete[] score_of_players_at_zero;
     };
 
     StatusType mergeGroups(int GroupID1, int GroupID2);
@@ -72,6 +79,7 @@ public:
 
     StatusType getPercentOfPlayersWithScoreInBounds (int GroupID, int score, int
     lowerLevel, int higherLevel, double * players);
+
 
 };
 
