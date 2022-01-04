@@ -44,7 +44,7 @@ public:
         parents= new int[num+1];
         size= new int[num+1];
         groups= new NodeUF<T>*[num+1];
-        for(int i=1;i<num+1;i++)
+        for(int i=0;i<num+1;i++)
         {
             parents[i]=-1;
             size[i]=0;
@@ -77,7 +77,6 @@ void UnionFind<T>::makeSet(T data, int id) {
     groups[id]=new NodeUF<T>(data);
     size[id]=1;
 }
-
 
 template<class T>
 T UnionFind<T>::find(int id) {

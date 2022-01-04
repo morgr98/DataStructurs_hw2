@@ -9,26 +9,31 @@
 #include "UnionFind.h"
 
 class GameSystem {
-    UnionFind<Group*> groups;
+    UnionFind<std::shared_ptr<Group>>* groups;
     //Group* data_groups;
-    HashTable<Player*> players;
-    Avltree<int,int> levels_tree;
-    Avltree<int,int>* scale_levels_trees_arr;
+    HashTable<std::shared_ptr<Player>>* players;
+    Avltree<int,int>* levels_tree;
+    Avltree<int,int>** scale_levels_trees_arr;
     int k;
     int scale;
     int num_of_players;
     int players_at_zero;
 public:
     GameSystem(int k, int scale): k(k), scale(scale), num_of_players(0), players_at_zero(0){
-        groups=UnionFind<Group*>(k);
-        players=HashTable<Player*>(100);
+        groups = new UnionFind<std::shared_ptr<Group>>(k);
+        players= new HashTable<std::shared_ptr<Player>>(100);
         //data_groups= new Group[k+1];
-        scale_levels_trees_arr = new Avltree<int,int>[scale+1];
+        levels_tree = new Avltree<int,int>;
+        scale_levels_trees_arr = new Avltree<int,int>*[scale+1];
+        for (int i=0;i<scale+1;i++)
+        {
+            scale_levels_trees_arr[i] = new Avltree<int,int>();
+            Node<int,int>* root = scale_levels_trees_arr[i]->root;
+        }
+        std::shared_ptr<Group> group;
         for (int i = 1; i <= k; ++i) {
-            Group* group = new Group(i,scale);
-            groups.makeSet(group,i);
-            delete group;
-
+            group = std::make_shared<Group>(i,scale);
+            groups->makeSet(std::move(group),i);
             //data_groups[i]=group;
         }
     }
@@ -45,12 +50,12 @@ public:
         groups = other.groups;
     }*/
     ~GameSystem(){
-        players.destroy();
-        levels_tree.destroy();
-        groups.destroy();
+        players->destroy();
+        levels_tree->destroy();
+        groups->destroy();
         for (int i=0;i<scale+1;i++)
         {
-            scale_levels_trees_arr[i].destroy();
+            scale_levels_trees_arr[i]->destroy();
         }
         delete[] scale_levels_trees_arr;
     };

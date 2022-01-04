@@ -282,7 +282,7 @@ public:
         return size;
     }
 
-    void Merge(Avltree<T,C>& other);
+    void Merge(Avltree<T,C>* other);
 
     void updateTreeRanks();
     void updateTreeRanksAux(Node<T,C>* node);
@@ -331,19 +331,21 @@ Node<T, C>* Avltree<T, C>::findKey(C key) {
 
 template<class T, class C>
 int Avltree<T, C>::insert(T data, C key) {
-    Node<T,C>* node = new Node<T,C>(data, key);
+
     if (root == nullptr) {
+        Node<T,C>* node = new Node<T,C>(data, key);
         root = node;
         size++;
         return 1;
     }
-    Node<T,C>* existing_node = this->findKey(node->getKey());
+    Node<T,C>* existing_node = this->findKey(key);
     if (existing_node != nullptr)
     {
         existing_node->setData(existing_node->getData()+data);
         updateRanksIteration(existing_node);
-        return 1; ////// ?
+        return 1;
     }
+    Node<T,C>* node = new Node<T,C>(data, key);
     NodePtr iterator = root;
     while (iterator != nullptr) {
         if (iterator->getKey() < key) {
@@ -789,10 +791,10 @@ Node<T, C>* Avltree<T, C>::buildATree(NodePtr *datas, int start, int end) {
     return Node_r;
 }
 template<class T, class C>
-void Avltree<T,C>::Merge(Avltree<T,C>& other)
+void Avltree<T,C>::Merge(Avltree<T,C>* other)
 {
     int size1 = size;
-    int size2 = other.getSize();
+    int size2 = other->getSize();
     int final_size = 0;
 
     Node<T,C>** tree_nodes = new Node<T,C>*[size1];
@@ -802,7 +804,7 @@ void Avltree<T,C>::Merge(Avltree<T,C>& other)
     //T* tree_datas= new T[size1];
     //T* other_tree= new T[size2];
     inorder(this->root,tree_nodes,0,size1);
-    inorder(other.root ,other_nodes,0,size2);
+    inorder(other->root ,other_nodes,0,size2);
     int c1 = 0, c2 = 0;
     while(c1 != size1 && c2 != size2)
     {

@@ -54,8 +54,8 @@ class HashTable {
     int min_size;
     NodeHT<T>** chain;
 public:
-    HashTable():  m(DEFAULT_SIZE-1), arr_size(DEFAULT_SIZE), min_size(DEFAULT_SIZE){};
-    HashTable(int arr_size):m(arr_size-1), arr_size(arr_size), min_size(arr_size){
+    HashTable():  m(DEFAULT_SIZE-1), arr_size(DEFAULT_SIZE), curr_size(0), min_size(DEFAULT_SIZE){};
+    HashTable(int arr_size):m(arr_size-1), arr_size(arr_size), curr_size(0), min_size(arr_size){
         top_threshold = 1;
         bottom_threshold = 0.5;
         chain = new NodeHT<T>*[arr_size];

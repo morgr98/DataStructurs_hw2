@@ -147,7 +147,8 @@ int main(int argc, const char**argv){
     }
     */
 
-GameSystem game(10, 200);
+GameSystem game(10, 5);
+/*
 game.addPlayer(1,1,1);
 game.addPlayer(2,1,1);
 game.addPlayer(3,3,2);
@@ -159,7 +160,6 @@ game.increasePlayerIDLevel(1,1);
 game.increasePlayerIDLevel(2,2);
 game.increasePlayerIDLevel(5,1);
 game.removePlayer(5);
-cout<<"A";
-
+ */
 return 0;
 };

@@ -17,13 +17,13 @@ int Group::getPlayersAtZero()
 }
 Avltree<int,int>* Group::getPlayersTree()
 {
-    return &levels_tree;
+    return levels_tree;
 }
-void Group::Merge(Group* other_group)
+void Group::Merge(std::shared_ptr<Group> other_group)
 {
     num_of_players = num_of_players+other_group->getNumPlayers();
     players_at_zero = players_at_zero + other_group->getPlayersAtZero();
-    levels_tree.Merge(other_group->levels_tree);
+    levels_tree->Merge(other_group->getPlayersTree());
 }
 void Group::addPlayer(int level_player, int score)
 {
@@ -32,8 +32,8 @@ void Group::addPlayer(int level_player, int score)
         players_at_zero++;
     else
     {
-        levels_tree.insert(1, level_player);
-        scale_levels_trees_arr[score].insert(1,level_player);
+        levels_tree->insert(1, level_player);
+        scale_levels_trees_arr[score]->insert(1,level_player);
     }
 }
 void Group::removePlayer(int level_player, int score)
@@ -42,8 +42,8 @@ void Group::removePlayer(int level_player, int score)
     if (level_player == 0)
         players_at_zero--;
     else{
-        levels_tree.remove(level_player);
-        scale_levels_trees_arr[score].remove(level_player);
+        levels_tree->remove(level_player);
+        scale_levels_trees_arr[score]->remove(level_player);
     }
 
 }
@@ -54,9 +54,9 @@ void Group::increasePlayerLevel(int old_level, int new_level, int score) {
         players_at_zero--;
     }
     else{
-        levels_tree.remove(old_level);
-        scale_levels_trees_arr[score].remove(old_level);
+        levels_tree->remove(old_level);
+        scale_levels_trees_arr[score]->remove(old_level);
     }
-    levels_tree.insert(1,new_level);
-    scale_levels_trees_arr[score].insert(1,new_level);
+    levels_tree->insert(1,new_level);
+    scale_levels_trees_arr[score]->insert(1,new_level);
 }
