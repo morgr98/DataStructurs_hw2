@@ -54,7 +54,7 @@ public:
 
     UnionFind(UnionFind& UF)= default;
     ~UnionFind(){this->destroy();};
-
+    void newUpdate(int num);
     void destroy();
     void makeSet(T data, int id);
     T find(int id);
@@ -67,10 +67,26 @@ void UnionFind<T>::destroy() {
     delete[] size;
     for (int i=0;i<num_elements+1;i++)
     {
-        delete groups[i];
+        if(groups[i]!= nullptr){
+            delete groups[i];
+        }
     }
     delete[] groups;
 }
+template<class T>
+void UnionFind<T>::newUpdate(int num) {
+    num_elements= num;
+    parents= new int[num+1];
+    size= new int[num+1];
+    groups= new NodeUF<T>*[num+1];
+    for(int i=0;i<num+1;i++)
+    {
+        parents[i]=-1;
+        size[i]=0;
+        groups[i]=nullptr;
+    }
+}
+
 
 template<class T>
 void UnionFind<T>::makeSet(T data, int id) {
@@ -84,6 +100,7 @@ T UnionFind<T>::find(int id) {
     if (id>num_elements)
         return nullptr;
     int parent_num=id, cur_num=id;
+    int num=parents[parent_num];
     while (parents[parent_num]!=-1)
     {
         parent_num=parents[parent_num];
