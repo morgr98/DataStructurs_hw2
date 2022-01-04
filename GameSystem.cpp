@@ -142,3 +142,25 @@ StatusType GameSystem::getPercentOfPlayersWithScoreInBounds(int GroupID, int sco
     std::shared_ptr<Group> group = groups->find(GroupID);
     return group->getPercentOfPlayersWithScoreInBounds(score, lowerLevel, higherLevel, players);
 }
+
+StatusType GameSystem::averageHighestPlayerLevelByGroup(int GroupID, int m, double *avgLevel) {
+    if(GroupID>k || GroupID <0 || m<=0)
+    {
+        return INVALID_INPUT;
+    }
+    if(GroupID!=0)
+    {
+        std::shared_ptr<Group> group = groups->find(GroupID);
+        if(m>group->getNumPlayers())
+        {
+            return  FAILURE;
+        }
+
+        return  SUCCESS;
+    }
+    if(m>num_of_players)
+    {
+        return FAILURE;
+    }
+    return SUCCESS;
+}

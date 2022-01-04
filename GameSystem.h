@@ -80,6 +80,7 @@ public:
     StatusType getPercentOfPlayersWithScoreInBounds (int GroupID, int score, int
     lowerLevel, int higherLevel, double * players);
 
+    StatusType averageHighestPlayerLevelByGroup(int GroupID, int m, double * avgLevel);
 
 };
 
