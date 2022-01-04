@@ -843,6 +843,7 @@ void Avltree<T,C>::Merge(Avltree<T,C>* other)
     this->updateTreeRanks();
     delete [] tree_nodes;
     delete [] other_nodes;
+    delete []new_tree_arr;
 }
 
 template<class T, class C>

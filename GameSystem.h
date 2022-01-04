@@ -28,7 +28,6 @@ public:
         for (int i=0;i<scale+1;i++)
         {
             scale_levels_trees_arr[i] = new Avltree<int,int>();
-            Node<int,int>* root = scale_levels_trees_arr[i]->root;
         }
         std::shared_ptr<Group> group;
         for (int i = 1; i <= k; ++i) {
@@ -50,12 +49,13 @@ public:
         groups = other.groups;
     }*/
     ~GameSystem(){
-        players->destroy();
-        levels_tree->destroy();
-        groups->destroy();
+        delete players;
+        delete levels_tree;
+        delete groups;
+
         for (int i=0;i<scale+1;i++)
         {
-            scale_levels_trees_arr[i]->destroy();
+            delete scale_levels_trees_arr[i];
         }
         delete[] scale_levels_trees_arr;
     };

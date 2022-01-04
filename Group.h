@@ -26,12 +26,13 @@ public:
         }
     };
     ~Group(){
-        levels_tree->destroy();
+        delete levels_tree;
         for (int i=0;i<scale+1;i++)
         {
-            scale_levels_trees_arr[i]->destroy();
+            delete scale_levels_trees_arr[i];
         }
         delete[] scale_levels_trees_arr;
+
     };
     Group(Group const& group)=default;
 

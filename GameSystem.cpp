@@ -99,6 +99,6 @@ StatusType GameSystem::changePlayerIDScore(int PlayerID, int NewScore) {
     player->updateScore(NewScore);
     scale_levels_trees_arr[old_score]->remove(player->getLevel());
     scale_levels_trees_arr[NewScore]->insert(1,player->getLevel());
-    return  SUCCESS;
+    return SUCCESS;
 }
 
