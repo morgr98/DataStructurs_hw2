@@ -23,9 +23,10 @@ public:
     ~Group(){
         for (int i=0;i<scale+1;i++)
         {
+            Avltree<int,int> aa= scale_levels_trees_arr[i];
             scale_levels_trees_arr[i].destroy();
         }
-        delete[] scale_levels_trees_arr;
+        delete [] scale_levels_trees_arr;
         levels_tree.destroy();
     };
     Group( Group& group)=default;

@@ -20,14 +20,21 @@ class GameSystem {
     int players_at_zero;
 public:
     GameSystem(int k, int scale): k(k), scale(scale), num_of_players(0), players_at_zero(0){
-        groups=UnionFind<Group*>(k);
-        players=HashTable<Player*>(100);
+        groups.newUpdate(k);
+        int a= groups.parents[0];
+        int b= groups.parents[1];
+        int c= groups.parents[2];
+        int d= groups.parents[3];
+        int e= groups.parents[4];
+        players.newUpdate(100);
         //data_groups= new Group[k+1];
         scale_levels_trees_arr = new Avltree<int,int>[scale+1];
+        Avltree<int,int> aa= scale_levels_trees_arr[0];
+        Avltree<int,int> aa1= scale_levels_trees_arr[1];
         for (int i = 1; i <= k; ++i) {
-            Group* group = new Group(i,scale);
-            groups.makeSet(group,i);
-            delete group;
+            //Group* group= ;
+            groups.makeSet(new Group(i,scale),i);
+           // delete group;
 
             //data_groups[i]=group;
         }
@@ -45,15 +52,10 @@ public:
         groups = other.groups;
     }*/
     ~GameSystem(){
-        players.destroy();
-        levels_tree.destroy();
-        groups.destroy();
-        for (int i=0;i<scale+1;i++)
-        {
-            scale_levels_trees_arr[i].destroy();
-        }
-        delete[] scale_levels_trees_arr;
+        destroy();
     };
+
+    void destroy();
 
     StatusType mergeGroups(int GroupID1, int GroupID2);
 

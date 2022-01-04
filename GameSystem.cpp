@@ -102,3 +102,15 @@ StatusType GameSystem::changePlayerIDScore(int PlayerID, int NewScore) {
     return  SUCCESS;
 }
 
+void GameSystem::destroy() {
+
+  //  players.destroy();
+    //levels_tree.destroy();
+  //  groups.destroy();
+
+    for (int i=0;i<scale+1;i++)
+    {
+        scale_levels_trees_arr[i].destroy();
+    }
+    delete [] scale_levels_trees_arr;
+}

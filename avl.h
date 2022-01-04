@@ -301,7 +301,8 @@ void Avltree<T, C>::deleteAvlNode(Node<T,C>* node)
 
 template<class T, class C>
 void Avltree<T, C>::destroy() {
-    deleteAvlNode(root);
+    if(root!= nullptr)
+        deleteAvlNode(root);
 }
 
 
@@ -342,6 +343,7 @@ int Avltree<T, C>::insert(T data, C key) {
     {
         existing_node->setData(existing_node->getData()+data);
         updateRanksIteration(existing_node);
+        delete node;
         return 1; ////// ?
     }
     NodePtr iterator = root;
