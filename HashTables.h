@@ -54,8 +54,8 @@ class HashTable {
     int min_size;
     NodeHT<T>** chain;
 public:
-    HashTable(): arr_size(DEFAULT_SIZE), min_size(DEFAULT_SIZE), m(DEFAULT_SIZE-1){};
-    HashTable(int arr_size): arr_size(arr_size), min_size(arr_size), m(arr_size-1){
+    HashTable():  m(DEFAULT_SIZE-1), arr_size(DEFAULT_SIZE), min_size(DEFAULT_SIZE){};
+    HashTable(int arr_size):m(arr_size-1), arr_size(arr_size), min_size(arr_size){
         top_threshold = 1;
         bottom_threshold = 0.5;
         chain = new NodeHT<T>*[arr_size];
@@ -67,7 +67,18 @@ public:
     {
         this->destroy();
     }
-    HashTable(HashTable<T>& HashTable)=default;
+    HashTable(HashTable<T>& hashtable)=default;/*{
+        m=hashtable.m;
+        arr_size = hashtable.arr_size;
+        curr_size=hashtable.curr_size;
+        top_threshold=hashtable.top_threshold;
+        bottom_threshold=hashtable.bottom_threshold;
+        min_size=hashtable.min_size;
+        for(int i=0;i<arr_size;i++)
+        {
+            chain[i] = hashtable.chain[i];
+        }
+    }*/
 
     void destroy();
     bool member(int key);
@@ -93,7 +104,7 @@ void HashTable<T>::destroy()
         }
         delete dummy_node;
     }
-    //delete[] chain;
+    delete[] chain;
 }
 template<class T>
 bool HashTable<T>::member(int key) {
@@ -206,7 +217,7 @@ void HashTable<T>::changeSize(bool increase)
         }
         delete dummy_node;
     }
-    // delete[] old_chain;
+    delete[] old_chain;
 }
 
 #endif //DATASTRUCTURS_HW2_HashTable_H

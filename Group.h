@@ -13,13 +13,21 @@ class Group {
     Avltree<int,int>* scale_levels_trees_arr;
     //HashTables<Player> players;
     int players_at_zero;
+    int scale;
 
 public:
     Group(){};
-    Group(int id, int scale): group_id(id), num_of_players(0), players_at_zero(0){
-        scale_levels_trees_arr = new Avltree<int,int>[scale];
+    Group(int id, int scale): group_id(id), num_of_players(0), players_at_zero(0), scale(scale){
+        scale_levels_trees_arr = new Avltree<int,int>[scale+1];
     };
-    ~Group()=default;
+    ~Group(){
+        for (int i=0;i<scale+1;i++)
+        {
+            scale_levels_trees_arr[i].destroy();
+        }
+        delete[] scale_levels_trees_arr;
+        levels_tree.destroy();
+    };
     Group( Group& group)=default;
 
     int getGroupId();

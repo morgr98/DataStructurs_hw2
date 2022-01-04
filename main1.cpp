@@ -36,7 +36,6 @@ int main(int argc, const char**argv){
     cout<<hs.member(13)<<endl;
     cout<<hs.member(15)<<endl;
     cout<<"!!!"<<endl;
-    /*
     GameSystem gm(5,100);
     for (int i = 1; i < 5; ++i) {
 
@@ -148,7 +147,7 @@ int main(int argc, const char**argv){
     }
     */
 
-GameSystem game = GameSystem(10, 200);
+GameSystem game(10, 200);
 game.addPlayer(1,1,1);
 game.addPlayer(2,1,1);
 game.addPlayer(3,3,2);

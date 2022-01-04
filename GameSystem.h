@@ -9,7 +9,7 @@
 #include "UnionFind.h"
 
 class GameSystem {
-    UnionFind<Group> groups;
+    UnionFind<Group*> groups;
     //Group* data_groups;
     HashTable<Player*> players;
     Avltree<int,int> levels_tree;
@@ -19,19 +19,21 @@ class GameSystem {
     int num_of_players;
     int players_at_zero;
 public:
-    GameSystem(int k, int scale): k(k), num_of_players(0), scale(scale), players_at_zero(0){
-        groups=UnionFind<Group>(k);
+    GameSystem(int k, int scale): k(k), scale(scale), num_of_players(0), players_at_zero(0){
+        groups=UnionFind<Group*>(k);
         players=HashTable<Player*>(100);
         //data_groups= new Group[k+1];
-        scale_levels_trees_arr = new Avltree<int,int>[scale];
+        scale_levels_trees_arr = new Avltree<int,int>[scale+1];
         for (int i = 1; i <= k; ++i) {
-            Group group(i,scale);
+            Group* group = new Group(i,scale);
             groups.makeSet(group,i);
+            delete group;
+
             //data_groups[i]=group;
         }
     }
-    GameSystem(const GameSystem& other)
-    {
+    /*GameSystem(GameSystem& other) = default;
+    *{
         //not sure
         k = other.k;
         num_of_players = other.num_of_players;
@@ -41,8 +43,17 @@ public:
         players = other.players;
         scale_levels_trees_arr=other.scale_levels_trees_arr;
         groups = other.groups;
-    }
-    ~GameSystem()=default;
+    }*/
+    ~GameSystem(){
+        players.destroy();
+        levels_tree.destroy();
+        groups.destroy();
+        for (int i=0;i<scale+1;i++)
+        {
+            scale_levels_trees_arr[i].destroy();
+        }
+        delete[] scale_levels_trees_arr;
+    };
 
     StatusType mergeGroups(int GroupID1, int GroupID2);
 

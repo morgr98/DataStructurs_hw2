@@ -7,10 +7,8 @@ template<class T>
 class NodeUF{
     T data;
     int size;
-    Avltree<int ,int> levels_tree;
 public:
     NodeUF(T data): data(data),size(1){};
-
     NodeUF():data(data), size(0){};
     NodeUF(NodeUF &node) = default;
 
@@ -42,7 +40,7 @@ public:
     int *size;
     NodeUF<T>** groups ;
     UnionFind()=default;
-     UnionFind(int num): num_elements(num){
+    UnionFind(int num): num_elements(num){
         parents= new int[num+1];
         size= new int[num+1];
         groups= new NodeUF<T>*[num+1];
@@ -50,16 +48,29 @@ public:
         {
             parents[i]=-1;
             size[i]=0;
+            groups[i]=nullptr;
         }
     }
 
     UnionFind(UnionFind& UF)= default;
-    ~UnionFind()=default;
+    ~UnionFind(){this->destroy();};
 
+    void destroy();
     void makeSet(T data, int id);
-    T* find(int id);
+    T find(int id);
     void Union(int id1, int id2);
 };
+
+template<class T>
+void UnionFind<T>::destroy() {
+    delete[] parents;
+    delete[] size;
+    for (int i=0;i<num_elements+1;i++)
+    {
+        delete groups[i];
+    }
+    delete[] groups;
+}
 
 template<class T>
 void UnionFind<T>::makeSet(T data, int id) {
@@ -69,7 +80,7 @@ void UnionFind<T>::makeSet(T data, int id) {
 
 
 template<class T>
-T* UnionFind<T>::find(int id) {
+T UnionFind<T>::find(int id) {
     //what if id doesnt exist?
     if (id>num_elements)
         return nullptr;
@@ -85,7 +96,7 @@ T* UnionFind<T>::find(int id) {
         parents[cur_num]=parent_num;
         cur_num=id;
     }
-    return groups[parent_num]->getDataPtr();
+    return groups[parent_num]->getData();
 }
 
 template<class T>
@@ -100,13 +111,13 @@ void UnionFind<T>::Union(int id1, int id2) {
     {
         parents[id2]=id1;
         size[id1]+=size[id2];
-        groups[id1]->getDataPtr()->Merge(groups[id2]->getDataPtr());
+        groups[id1]->getData()->Merge(groups[id2]->getData());
     }
     else
     {
         parents[id1]=id2;
         size[id2]+=size[id1];
-        groups[id2]->getDataPtr()->Merge(groups[id1]->getDataPtr());
+        groups[id2]->getData()->Merge(groups[id1]->getData());
     }
 }
 

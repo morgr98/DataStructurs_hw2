@@ -20,20 +20,8 @@ class Node {
     int h;
 
 public:
-    Node(T data, C key) : key(key), data(data), parent(nullptr), sum_subtree(data), levels_sum(data*key),
-    right(nullptr), left(nullptr), h(0) {/*
-         scale(scale),
-        , levels_sum(data*key),
-        score_arr = new int [scale];
-        score_subtree = new int [scale];
-        for (int i=0;i<scale;i++)
-        {
-            score_arr[i] = 0;
-            score_subtree[i] = 0;
-        }
-        */
-    }
-
+    Node(T data, C key) : key(key), data(data), sum_subtree(data), levels_sum(data*key), parent(nullptr),
+    right(nullptr), left(nullptr), h(0) {};
     ~Node()
         /*delete[] score_arr;
         delete[] score_subtree;*/
@@ -249,7 +237,10 @@ public:
 
     Avltree() : root(nullptr), size(0) {}
 
-    ~Avltree()=default;
+    ~Avltree()
+    {
+        this->destroy();
+    };
 
     void deleteAvlNode(NodePtr node);
 
@@ -304,14 +295,6 @@ void Avltree<T, C>::deleteAvlNode(Node<T,C>* node)
     {
         deleteAvlNode(node->getLeft());
         deleteAvlNode(node->getRight());
-        if(node->getParent()!= nullptr)
-        {
-            if(node->isLeft())
-                node->getParent()->getLeft().reset();
-            else
-                node->getParent()->getRight().reset();
-        }
-        node->removeTies();
         delete node;
     }
 }

@@ -18,12 +18,12 @@ StatusType GameSystem::addPlayer(int PlayerID, int GroupID, int score) {
     {
         return FAILURE;
     }
-    num_of_players++;\
+    num_of_players++;
     Player* new_player;
     try{
         new_player = new Player(PlayerID,score,GroupID);
     }
-    catch(std::bad_alloc&)
+    catch (std::bad_alloc&)
     {
         return ALLOCATION_ERROR;
     }
