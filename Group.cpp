@@ -18,7 +18,7 @@ int Group::getPlayersAtZero()
 }
 Avltree<int,int>* Group::getPlayersTree()
 {
-    return levels_tree;
+    return group_levels_tree;
 }
 void Group::Merge(std::shared_ptr<Group> other_group)
 {
@@ -29,7 +29,7 @@ void Group::Merge(std::shared_ptr<Group> other_group)
         score_of_players_at_zero[i] += other_group->score_of_players_at_zero[i];
         scale_levels_trees_arr[i]->Merge(other_group->scale_levels_trees_arr[i]);
     }
-    levels_tree->Merge(other_group->getPlayersTree());
+    group_levels_tree->Merge(other_group->getPlayersTree());
 }
 void Group::addPlayer(int level_player, int score)
 {
@@ -41,7 +41,7 @@ void Group::addPlayer(int level_player, int score)
     }
     else
     {
-        levels_tree->insert(1, level_player);
+        group_levels_tree->insert(1, level_player);
         scale_levels_trees_arr[score]->insert(1,level_player);
     }
 }
@@ -55,7 +55,7 @@ void Group::removePlayer(int level_player, int score)
     }
 
     else{
-        levels_tree->remove(level_player);
+        group_levels_tree->remove(level_player);
         scale_levels_trees_arr[score]->remove(level_player);
     }
 
@@ -68,10 +68,10 @@ void Group::increasePlayerLevel(int old_level, int new_level, int score) {
         score_of_players_at_zero[score]--;
     }
     else{
-        levels_tree->remove(old_level);
+        group_levels_tree->remove(old_level);
         scale_levels_trees_arr[score]->remove(old_level);
     }
-    levels_tree->insert(1,new_level);
+    group_levels_tree->insert(1,new_level);
     scale_levels_trees_arr[score]->insert(1,new_level);
 }
 StatusType Group::getPercentOfPlayersWithScoreInBounds(int score, int lowerLevel, int higherLevel, double *players)
@@ -80,7 +80,7 @@ StatusType Group::getPercentOfPlayersWithScoreInBounds(int score, int lowerLevel
     int all_of_players=0;
     Avltree<int,int>* tree = scale_levels_trees_arr[score];
     num_of_players_with_score = tree->getSumInBorder(lowerLevel, higherLevel);
-    all_of_players= levels_tree->getSumInBorder(lowerLevel, higherLevel);
+    all_of_players= group_levels_tree->getSumInBorder(lowerLevel, higherLevel);
     if(all_of_players==0)
         return FAILURE;
     if(lowerLevel==0)
@@ -101,7 +101,7 @@ StatusType Group::averageHighestPlayerLevelByGroup(int m, double *avgLevel) {
     {
         num=num_of_players- players_at_zero;
     }
-    double sum= levels_tree->getHighestSumLevel(num);
+    double sum= group_levels_tree->getHighestSumLevel(num);
     *avgLevel= (double (sum/m));
     return SUCCESS;
 }

@@ -26,7 +26,6 @@ public:
         /*delete[] score_arr;
         delete[] score_subtree;*/
      = default;
-
     void setKey(C key) {
         this->key = key;
     }
@@ -300,6 +299,7 @@ void Avltree<T, C>::deleteAvlNode(Node<T,C>* node)
         deleteAvlNode(node->getLeft());
         deleteAvlNode(node->getRight());
         delete node;
+        node = nullptr;
     }
 }
 
@@ -640,6 +640,7 @@ Node<T, C>* Avltree<T, C>::removebinary(NodePtr node) {
         if (root->getKey() == node->getKey()) {
             node->removeTies();
             delete root;
+            root = nullptr;
             return nullptr;
         }
         if (node->isRight()) {
