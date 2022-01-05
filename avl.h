@@ -800,6 +800,10 @@ void Avltree<T,C>::Merge(Avltree<T,C>* other)
     int size1 = size;
     int size2 = other->getSize();
     int final_size = 0;
+    if(size1==0 && size2 ==0)
+    {
+        return;
+    }
 
     Node<T,C>** tree_nodes = new Node<T,C>*[size1];
     Node<T,C>** other_nodes = new Node<T,C>*[size2];
@@ -845,7 +849,7 @@ void Avltree<T,C>::Merge(Avltree<T,C>* other)
     {
         new_tree_arr[i]->removeTies();
     }
-    makeATree(new_tree_arr,0,final_size);
+    makeATree(new_tree_arr,0,final_size-1);
     size=final_size;
     this->updateTreeRanks();
     delete [] tree_nodes;
