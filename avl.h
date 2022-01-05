@@ -827,16 +827,19 @@ void Avltree<T,C>::Merge(Avltree<T,C>* other)
             new_tree_arr[c1+c2]->setData(new_tree_arr[c1+c2]->getData()+other_nodes[c2]->getData());
             c1++;
             c2++;
+            final_size++;
         }
     }
     while (c1!=size1)
     {
         new_tree_arr[c1 + c2] = tree_nodes[c1];
         c1++;
+        final_size++;
     }
     while (c2 != size2) {
         new_tree_arr[c1 + c2] = other_nodes[c2];
         c2++;
+        final_size++;
     }
     for(int i=0; i<final_size;i++)
     {

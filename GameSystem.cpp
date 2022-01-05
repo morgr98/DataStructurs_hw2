@@ -163,7 +163,7 @@ StatusType GameSystem::averageHighestPlayerLevelByGroup(int GroupID, int m, doub
     {
         num=num_of_players- players_at_zero;
     }
-    double sum= levels_tree->getHighestSumLevel(m);
+    double sum= levels_tree->getHighestSumLevel(num);
     *avgLevel= (double (sum/m));
     return SUCCESS;
 }
