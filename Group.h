@@ -52,7 +52,8 @@ public:
     void removePlayer(int level_player, int score);
     void Merge(std::shared_ptr<Group> other_group);
     void increasePlayerLevel(int old_level, int new_level, int score);
-    StatusType getPercentOfPlayersWithScoreInBounds(int score, int lowerLevel, int higherLevel, double *players);
+    StatusType getPercentOfPlayersWithScoreInBounds(int score, int lowerLevel, int higherLevel, double *players);\
+    StatusType averageHighestPlayerLevelByGroup(int m, double *avgLevel);
 };
 
 

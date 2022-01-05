@@ -155,16 +155,27 @@ game.addPlayer(3,3,2);
 game.addPlayer(1,1,1);
 game.addPlayer(4,2,2);
 game.addPlayer(5,2,1);
+game.addPlayer(6,1,1);
+game.addPlayer(7,2,2);
+game.addPlayer(8,2,1);
 game.mergeGroups(1,2);
 game.increasePlayerIDLevel(1,1);
 game.increasePlayerIDLevel(2,2);
-game.increasePlayerIDLevel(5,1);
+game.increasePlayerIDLevel(5,5);
+game.increasePlayerIDLevel(6,3);
+game.increasePlayerIDLevel(7,4);
+game.increasePlayerIDLevel(8,5);
 game.removePlayer(5);
 double percent = 0;
 game.getPercentOfPlayersWithScoreInBounds(0,1,0,1,&percent);
 cout<<percent<<endl;
 game.getPercentOfPlayersWithScoreInBounds(1,1,0,1,&percent);
 cout<<percent<<endl;
+game.averageHighestPlayerLevelByGroup(0,3,&percent);
+cout<<percent<<endl;
+game.averageHighestPlayerLevelByGroup(1,3,&percent);
+cout<<percent<<endl;
+
 
 return 0;
 };

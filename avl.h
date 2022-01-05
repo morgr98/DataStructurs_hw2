@@ -280,6 +280,7 @@ public:
     void updateTreeRanks();
     void updateTreeRanksAux(Node<T,C>* node);
     T getSumInBorder(C key1, C key2);
+    T getHighestSumLevel(C m);
 
     int getSize()
     {
@@ -895,6 +896,35 @@ T Avltree<T,C>::getSumInBorder(C key1, C key2) {
     }
     return sum2-sum1;
 
+}
+
+template<class T, class C>
+T Avltree<T, C>::getHighestSumLevel(C m) {
+    Node<T,C>* iterator = root;
+    T sum=0;
+    C count=0;
+    while (iterator!= nullptr &&  m >0 )
+    {
+        if(iterator->getRight()!= nullptr)
+        {
+                if(iterator->getRight()->getSum()>m)
+                {
+                    iterator=iterator->getRight();
+                    continue;
+                }
+                sum+=iterator->getRight()->getLevelSum();
+                m-=iterator->getRight()->getSum();
+            }
+            if(iterator->getData()>m)
+            {
+                sum+=m*iterator->getKey();
+                return sum;
+            }
+            sum+=iterator->getKey()*iterator->getData();
+            m-=iterator->getData();
+            iterator=iterator->getLeft();
+    }
+    return sum;
 }
 
 #endif

@@ -58,6 +58,7 @@ StatusType GameSystem::removePlayer(int PlayerID) {
         levels_tree->remove(level);
         scale_levels_trees_arr[score]->remove(level);
     }
+    num_of_players--;
     return SUCCESS;
 }
 
@@ -151,16 +152,18 @@ StatusType GameSystem::averageHighestPlayerLevelByGroup(int GroupID, int m, doub
     if(GroupID!=0)
     {
         std::shared_ptr<Group> group = groups->find(GroupID);
-        if(m>group->getNumPlayers())
-        {
-            return  FAILURE;
-        }
-
-        return  SUCCESS;
+        return  group->averageHighestPlayerLevelByGroup(m,avgLevel);
     }
     if(m>num_of_players)
     {
         return FAILURE;
     }
+    int num=m;
+    if(m>num_of_players - players_at_zero)
+    {
+        num=num_of_players- players_at_zero;
+    }
+    double sum= levels_tree->getHighestSumLevel(m);
+    *avgLevel= (double (sum/m));
     return SUCCESS;
 }

@@ -91,3 +91,17 @@ StatusType Group::getPercentOfPlayersWithScoreInBounds(int score, int lowerLevel
     *players = (double(num_of_players_with_score)/all_of_players)*100;
     return SUCCESS;
 }
+
+StatusType Group::averageHighestPlayerLevelByGroup(int m, double *avgLevel) {
+    if(m>num_of_players){
+        return  FAILURE;
+    }
+    int num=m;
+    if(m>num_of_players - players_at_zero)
+    {
+        num=num_of_players- players_at_zero;
+    }
+    double sum= levels_tree->getHighestSumLevel(num);
+    *avgLevel= (double (sum/m));
+    return SUCCESS;
+}
