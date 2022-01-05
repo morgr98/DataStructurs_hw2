@@ -880,7 +880,8 @@ T Avltree<T,C>::getSumInBorder(C key1, C key2) {
                 break;
             iterator=iterator->getRight();
         }
-        iterator=iterator->getLeft();
+        else
+            iterator=iterator->getLeft();
     }
     iterator = root;
     while(iterator!=nullptr)
@@ -892,7 +893,8 @@ T Avltree<T,C>::getSumInBorder(C key1, C key2) {
                 sum1 = sum1 + iterator->getLeft()->getSum();
             iterator=iterator->getRight();
         }
-        iterator=iterator->getLeft();
+        else
+            iterator=iterator->getLeft();
     }
     return sum2-sum1;
 
