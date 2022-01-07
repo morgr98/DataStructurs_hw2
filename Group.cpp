@@ -29,6 +29,10 @@ void Group::Merge(std::shared_ptr<Group> other_group)
         score_of_players_at_zero[i] += other_group->score_of_players_at_zero[i];
         scale_levels_trees_arr[i]->Merge(other_group->scale_levels_trees_arr[i]);
     }
+    if(other_group->getGroupId()==1)
+    {
+        std::cout<<"here";
+    }
     group_levels_tree->Merge(other_group->getPlayersTree());
 }
 void Group::addPlayer(int level_player, int score)
@@ -68,24 +72,51 @@ void Group::increasePlayerLevel(int old_level, int new_level, int score) {
         score_of_players_at_zero[score]--;
     }
     else{
+        if (old_level == 1 && new_level == 5)
+            int x =0;
         group_levels_tree->remove(old_level);
         scale_levels_trees_arr[score]->remove(old_level);
     }
+    if(group_levels_tree->size!=0)
+        int x =0;
     group_levels_tree->insert(1,new_level);
     scale_levels_trees_arr[score]->insert(1,new_level);
+}
+StatusType Group::changePlayerScore(int old_score, int new_score, int level)
+{
+    if(level==0)
+    {
+        score_of_players_at_zero[old_score]--;
+        score_of_players_at_zero[new_score]++;
+    }
+    else
+    {
+        scale_levels_trees_arr[old_score]->remove(level);
+        scale_levels_trees_arr[new_score]->insert(1,level);
+    }
+    return SUCCESS;
 }
 StatusType Group::getPercentOfPlayersWithScoreInBounds(int score, int lowerLevel, int higherLevel, double *players)
 {
     int num_of_players_with_score=0;
     int all_of_players=0;
-    Avltree<int,int>* tree = scale_levels_trees_arr[score];
-    num_of_players_with_score = tree->getSumInBorder(lowerLevel, higherLevel);
+
+    if(score<scale && score>1)
+    {
+        Avltree<int,int>* tree = scale_levels_trees_arr[score];
+        num_of_players_with_score = tree->getSumInBorder(lowerLevel, higherLevel);
+    }
+    else
+        num_of_players_with_score = 0;
     all_of_players= group_levels_tree->getSumInBorder(lowerLevel, higherLevel);
     if(all_of_players==0)
         return FAILURE;
     if(lowerLevel==0)
     {
-        num_of_players_with_score+=score_of_players_at_zero[score];
+        if(score<scale && score>1)
+        {
+            num_of_players_with_score+=score_of_players_at_zero[score];
+        }
         all_of_players+=players_at_zero;
     }
     *players = (double(num_of_players_with_score)/all_of_players)*100;

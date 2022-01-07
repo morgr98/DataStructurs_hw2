@@ -100,7 +100,6 @@ T UnionFind<T>::find(int id) {
     if (id>num_elements)
         return nullptr;
     int parent_num=id, cur_num=id;
-    int num=parents[parent_num];
     while (parents[parent_num]!=-1)
     {
         parent_num=parents[parent_num];

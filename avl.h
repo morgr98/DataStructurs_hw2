@@ -306,6 +306,8 @@ void Avltree<T, C>::deleteAvlNode(Node<T,C>* node)
 template<class T, class C>
 void Avltree<T, C>::destroy() {
     deleteAvlNode(root);
+    root = nullptr;
+    size = 0;
 }
 
 
@@ -335,7 +337,8 @@ Node<T, C>* Avltree<T, C>::findKey(C key) {
 
 template<class T, class C>
 int Avltree<T, C>::insert(T data, C key) {
-
+    if (size<0)
+        int x=0;
     if (root == nullptr) {
         Node<T,C>* node = new Node<T,C>(data, key);
         root = node;
@@ -381,14 +384,14 @@ int Avltree<T, C>::insert(T data, C key) {
         int p_height = p->getHeight();
         if (p_height >= it_height + 1)
         {
-            size++;
+            //size++;
             return 1;
         }
 
         p->setHeight(it_height + 1);
         if (p->getBF() >= 2 || p->getBF() <= -2) {
             roll(p, p->getBF());
-            size++;
+            //size++;
             return 1;
         }
         iterator = p;
@@ -747,6 +750,7 @@ Node<T, C>* Avltree<T, C>::removebinary(NodePtr node) {
 
 template<class T, class C>
 void Avltree<T, C>::remove(C key) {
+
     NodePtr node_to_remove = this->findKey(key);
     if (node_to_remove== nullptr)
         return;
@@ -764,6 +768,9 @@ void Avltree<T, C>::remove(C key) {
         }
     }
     size--;
+    if(size <0)
+        int x =0;
+
 }
 
 template<class T, class C>
@@ -785,7 +792,7 @@ Node<T, C>* Avltree<T, C>::buildATree(NodePtr *datas, int start, int end) {
     if(start>end || end ==0)
         return nullptr;
     int mid=(end+start)/2;
-    NodePtr Node_r=datas[mid];
+    NodePtr Node_r = new Node<T,C> (datas[mid]->getData(), datas[mid]->getKey());
     Node_r->setLeft(buildATree(datas,start, mid-1));
     Node_r->setRight(buildATree(datas,mid+1,end));
     if(Node_r->getRight()!= nullptr)
@@ -801,11 +808,16 @@ void Avltree<T,C>::Merge(Avltree<T,C>* other)
     int size1 = size;
     int size2 = other->getSize();
     int final_size = 0;
-    if(size1==0 && size2 ==0)
-    {
+    if(size2 ==0)
         return;
+    if(size1==0 && size2 ==1)
+    {
+       this->root =  other->root;
+       this->size = 1;
+       other->root = nullptr;
+       other->size = 0;
+       return;
     }
-
     Node<T,C>** tree_nodes = new Node<T,C>*[size1];
     Node<T,C>** other_nodes = new Node<T,C>*[size2];
     Node<T,C>** new_tree_arr = new Node<T,C>*[size1+size2];
@@ -814,48 +826,67 @@ void Avltree<T,C>::Merge(Avltree<T,C>* other)
     //T* other_tree= new T[size2];
     inorder(this->root,tree_nodes,0,size1);
     inorder(other->root ,other_nodes,0,size2);
-    int c1 = 0, c2 = 0;
+    int c1 = 0, c2 = 0, double_counter = 0;
+
     while(c1 != size1 && c2 != size2)
     {
         if (tree_nodes[c1]->getKey() > other_nodes[c2]->getKey()) {
-            new_tree_arr[c1 + c2] = other_nodes[c2];
+            //delete new_tree_arr[c1+c2];
+            new_tree_arr[c1 + c2 - double_counter] = new Node<T,C>(other_nodes[c2]->getData(), other_nodes[c2]->getKey());
             c2++;
             final_size++;
         } else if (tree_nodes[c1]->getKey() < other_nodes[c2]->getKey()){
-            new_tree_arr[c1 + c2] = tree_nodes[c1];
+            new_tree_arr[c1 + c2- double_counter] = tree_nodes[c1];
+            if(c1==2 && c2==1)
+            {
+                NodePtr node = tree_nodes[c1];
+                int x = node->getKey();
+            }
             c1++;
             final_size++;
         }
         else
         {
-            new_tree_arr[c1+c2] = tree_nodes[c1];
-            new_tree_arr[c1+c2]->setData(new_tree_arr[c1+c2]->getData()+other_nodes[c2]->getData());
+            new_tree_arr[c1+c2-double_counter] = new Node<T,C>(tree_nodes[c1]->getData(), tree_nodes[c1]->getKey());
+            new_tree_arr[c1+c2-double_counter]->setData(new_tree_arr[c1+c2]->getData()+other_nodes[c2]->getData());
             c1++;
             c2++;
+            double_counter++;
             final_size++;
         }
     }
     while (c1!=size1)
     {
-        new_tree_arr[c1 + c2] = tree_nodes[c1];
+        new_tree_arr[c1 + c2 - double_counter] = new Node<T,C>(tree_nodes[c1]->getData(), tree_nodes[c1]->getKey());
         c1++;
         final_size++;
     }
     while (c2 != size2) {
-        new_tree_arr[c1 + c2] = other_nodes[c2];
+        //delete new_tree_arr[c1+c2];
+        new_tree_arr[c1 + c2-double_counter] = new Node<T,C>(other_nodes[c2]->getData(), other_nodes[c2]->getKey());
         c2++;
         final_size++;
     }
-    for(int i=0; i<final_size;i++)
+    /*for(int i=0; i<final_size;i++)
     {
         new_tree_arr[i]->removeTies();
-    }
+    }*/
+    if(final_size>=3)
+        int temp = new_tree_arr[2]->getKey();
     makeATree(new_tree_arr,0,final_size-1);
+    other->destroy();
     size=final_size;
     this->updateTreeRanks();
     delete [] tree_nodes;
     delete [] other_nodes;
+    for(int i=0; i<final_size;i++)
+    {
+        delete new_tree_arr[i];
+    }
     delete []new_tree_arr;
+    std::cout<<"size of tree1: "<<size1<<" size of tree2: "<<size2<<" new size: "<<final_size<<std::endl;
+    if(size1<0 || size2<0 || size<0)
+        int x=0;
 }
 
 template<class T, class C>
@@ -912,7 +943,6 @@ template<class T, class C>
 T Avltree<T, C>::getHighestSumLevel(C m) {
     Node<T,C>* iterator = root;
     T sum=0;
-    C count=0;
     while (iterator!= nullptr &&  m >0 )
     {
         if(iterator->getRight()!= nullptr)

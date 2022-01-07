@@ -82,6 +82,8 @@ public:
 
     StatusType averageHighestPlayerLevelByGroup(int GroupID, int m, double * avgLevel);
 
+    static bool isLegal(int score);
+
 };
 
 
