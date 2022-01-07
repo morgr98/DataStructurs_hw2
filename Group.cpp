@@ -22,6 +22,10 @@ Avltree<int,int>* Group::getPlayersTree()
 }
 void Group::Merge(std::shared_ptr<Group> other_group)
 {
+   // if (group_id== 38)
+  //  {
+  //      std::cout<<"h";
+  //  }
     num_of_players = num_of_players+other_group->getNumPlayers();
     players_at_zero = players_at_zero + other_group->getPlayersAtZero();
     for(int i=0;i<scale+1;i++)
@@ -29,10 +33,14 @@ void Group::Merge(std::shared_ptr<Group> other_group)
         score_of_players_at_zero[i] += other_group->score_of_players_at_zero[i];
         scale_levels_trees_arr[i]->Merge(other_group->scale_levels_trees_arr[i]);
     }
-    if(other_group->getGroupId()==1)
-    {
-        std::cout<<"here";
-    }
+ //   if(other_group->getGroupId()==1)
+  //  {
+   //     std::cout<<"here";
+   // }
+   // if(num_of_players- players_at_zero>0)
+   // {
+  //      std::cout<<"h";
+  //  }
     group_levels_tree->Merge(other_group->getPlayersTree());
 }
 void Group::addPlayer(int level_player, int score)
@@ -109,8 +117,6 @@ StatusType Group::getPercentOfPlayersWithScoreInBounds(int score, int lowerLevel
     else
         num_of_players_with_score = 0;
     all_of_players= group_levels_tree->getSumInBorder(lowerLevel, higherLevel);
-    if(all_of_players==0)
-        return FAILURE;
     if(lowerLevel==0)
     {
         if(score<scale && score>1)
@@ -119,6 +125,8 @@ StatusType Group::getPercentOfPlayersWithScoreInBounds(int score, int lowerLevel
         }
         all_of_players+=players_at_zero;
     }
+    if(all_of_players==0)
+        return FAILURE;
     *players = (double(num_of_players_with_score)/all_of_players)*100;
     return SUCCESS;
 }

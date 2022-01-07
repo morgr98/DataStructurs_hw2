@@ -6,13 +6,17 @@ StatusType GameSystem::mergeGroups(int GroupID1, int GroupID2)
 {
     if (GroupID1<=0 || GroupID2<=0 || GroupID1>k || GroupID2>k)
         return INVALID_INPUT;
-    if(GroupID1==38&&GroupID2==1)
-        std::cout<<"here";
+  //  if(GroupID1==39&&GroupID2==5)
+  //      std::cout<<"here";
     groups->Union(GroupID1, GroupID2);
     return SUCCESS;
 }
 
 StatusType GameSystem::addPlayer(int PlayerID, int GroupID, int score) {
+   // if(GroupID== 23)
+  //  {
+  //      std::cout<<"h";
+  //  }
     if(PlayerID<=0 || score<=0|| score >scale || GroupID<= 0 || GroupID>k){
         return INVALID_INPUT;
     }
@@ -69,7 +73,7 @@ StatusType GameSystem::increasePlayerIDLevel(int PlayerID, int LevelIncrease) {
     {
         return  INVALID_INPUT;
     }
-    if(PlayerID == 621292714)
+    if(PlayerID == 1871945604)
         int x=0;
     if(!players->member(PlayerID))
     {
@@ -96,6 +100,10 @@ StatusType GameSystem::increasePlayerIDLevel(int PlayerID, int LevelIncrease) {
 }
 
 StatusType GameSystem::changePlayerIDScore(int PlayerID, int NewScore) {
+   // if(PlayerID==1773324543)
+  //  {
+   //     std::cout<<"h";
+   // }
     if(NewScore<=0 || NewScore > scale || PlayerID<=0)
     {
         return INVALID_INPUT;
@@ -133,23 +141,23 @@ StatusType GameSystem::getPercentOfPlayersWithScoreInBounds(int GroupID, int sco
     if (GroupID==0)
     {
         all_of_players= levels_tree->getSumInBorder(lowerLevel, higherLevel);
-        if(score<k && score>1)
+        if(score<=scale && score>1)
         {
             Avltree<int,int>* tree = scale_levels_trees_arr[score];
             num_of_players_with_score = tree->getSumInBorder(lowerLevel, higherLevel);
         }
         else
             num_of_players_with_score = 0;
-        if(all_of_players==0)
-            return FAILURE;
         if(lowerLevel==0)
         {
-            if(score<k && score>1)
+            if(score<=scale && score>1)
             {
                 num_of_players_with_score+=score_of_players_at_zero[score];
             }
             all_of_players+=players_at_zero;
         }
+        if(all_of_players==0)
+            return FAILURE;
         *players = (double(num_of_players_with_score)/all_of_players)*100;
         return SUCCESS;
     }
@@ -161,6 +169,10 @@ StatusType GameSystem::averageHighestPlayerLevelByGroup(int GroupID, int m, doub
     if(GroupID>k || GroupID <0 || m<=0)
     {
         return INVALID_INPUT;
+    }
+    if(m==27)
+    {
+        int x=27;
     }
     if(GroupID!=0)
     {
