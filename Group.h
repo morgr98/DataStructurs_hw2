@@ -54,6 +54,8 @@ public:
     StatusType changePlayerScore(int old_score, int new_score, int level);
     StatusType getPercentOfPlayersWithScoreInBounds(int score, int lowerLevel, int higherLevel, double *players);
     StatusType averageHighestPlayerLevelByGroup(int m, double *avgLevel);
+    StatusType getPlayersBound(int score, int m, int * LowerBoundPlayers,
+                               int * HigherBoundPlayers);
 };
 
 

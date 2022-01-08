@@ -62,8 +62,7 @@ StatusType GetPlayersBound(void *DS, int GroupID, int score, int m,
     {
         if (DS == nullptr)
             return INVALID_INPUT;
-        //need to implement!
-        return SUCCESS;
+        return ((GameSystem*)DS)->getPlayersBound(GroupID, score, m, LowerBoundPlayers, HigherBoundPlayers);
     }
 }
 

@@ -280,6 +280,8 @@ public:
     void updateTreeRanksAux(Node<T,C>* node);
     T getSumInBorder(C key1, C key2);
     T getHighestSumLevel(C m);
+    C findLowestLevelOutOfM(T m);
+    T countDataAboveKey(C min_key);
 
     int getSize()
     {
@@ -850,12 +852,7 @@ void Avltree<T,C>::Merge(Avltree<T,C>* other)
             c2++;
             final_size++;
         } else if (tree_nodes[c1]->getKey() < other_nodes[c2]->getKey()){
-            new_tree_arr[c1 + c2- double_counter] = tree_nodes[c1];
-            if(c1==2 && c2==1)
-            {
-                NodePtr node = tree_nodes[c1];
-                int x = node->getKey();
-            }
+            new_tree_arr[c1 + c2- double_counter] = new Node<T,C> (tree_nodes[c1]->getData(), tree_nodes[c1]->getKey());
             c1++;
             final_size++;
         }
@@ -887,6 +884,7 @@ void Avltree<T,C>::Merge(Avltree<T,C>* other)
     }
     if(final_size>=3)
         int temp = new_tree_arr[2]->getKey();
+    this->destroy();
     makeATree(new_tree_arr,0,final_size-1);
     other->destroy();
     size=final_size;
@@ -968,17 +966,66 @@ T Avltree<T, C>::getHighestSumLevel(C m) {
                 }
                 sum+=iterator->getRight()->getLevelSum();
                 m-=iterator->getRight()->getSum();
-            }
-            if(iterator->getData()>m)
-            {
-                sum+=m*iterator->getKey();
-                return sum;
-            }
-            sum+=iterator->getKey()*iterator->getData();
-            m-=iterator->getData();
-            iterator=iterator->getLeft();
+        }
+        if(iterator->getData()>m)
+        {
+            sum+=m*iterator->getKey();
+            return sum;
+        }
+        sum+=iterator->getKey()*iterator->getData();
+        m-=iterator->getData();
+        iterator=iterator->getLeft();
     }
     return sum;
 }
 
+template<class T, class C>
+C Avltree<T, C>::findLowestLevelOutOfM(T m)
+{
+    Node<T,C>* iterator = root;
+    if(root == nullptr)
+        return 0;
+    while(iterator!=nullptr && m > 0)
+    {
+        if(iterator->getRight()!=nullptr)
+        {
+            if(iterator->getRight()->getSum()>=m)
+            {
+                iterator=iterator->getRight();
+                continue;
+            }
+            m-=iterator->getRight()->getSum();
+        }
+        if(iterator->getData()>=m)
+        {
+            return iterator->getKey();
+        }
+        m-=iterator->getData();
+        iterator=iterator->getLeft();
+    }
+    return 0;
+}
+
+template<class T, class C>
+T Avltree<T, C>::countDataAboveKey(C min_key)
+{
+    Node<T,C>* iterator = root;
+    if(root== nullptr)
+        return 0;
+    int sum=0;
+    while (iterator!=nullptr)
+    {
+        if(iterator->getKey()<min_key)
+        {
+            iterator=iterator->getRight();
+            continue;
+        }
+
+        if(iterator->getRight()!=nullptr)
+            sum += iterator->getRight()->getSum();
+        sum+=iterator->getData();
+        iterator = iterator->getLeft();
+    }
+    return sum;
+}
 #endif

@@ -142,8 +142,6 @@ StatusType GameSystem::getPercentOfPlayersWithScoreInBounds(int GroupID, int sco
         return INVALID_INPUT;
     int num_of_players_with_score=0;
     int all_of_players=0;
-    if(score== 23)
-        int x= 0;
     if(higherLevel<lowerLevel)
     {
         return FAILURE;
@@ -151,7 +149,7 @@ StatusType GameSystem::getPercentOfPlayersWithScoreInBounds(int GroupID, int sco
     if (GroupID==0)
     {
         all_of_players= levels_tree->getSumInBorder(lowerLevel, higherLevel);
-        if(score<=scale && score>1)
+        if(score<=scale && score>=1)
         {
             Avltree<int,int>* tree = scale_levels_trees_arr[score];
             num_of_players_with_score = tree->getSumInBorder(lowerLevel, higherLevel);
@@ -160,7 +158,7 @@ StatusType GameSystem::getPercentOfPlayersWithScoreInBounds(int GroupID, int sco
             num_of_players_with_score = 0;
         if(lowerLevel==0)
         {
-            if(score<=scale && score>1)
+            if(score<=scale && score>=1)
             {
                 num_of_players_with_score+=score_of_players_at_zero[score];
             }
@@ -179,10 +177,6 @@ StatusType GameSystem::averageHighestPlayerLevelByGroup(int GroupID, int m, doub
     if(GroupID>k || GroupID <0 || m<=0)
     {
         return INVALID_INPUT;
-    }
-    if(m==24 || m ==12)
-    {
-        int x=27;
     }
     if(GroupID!=0)
     {
@@ -203,3 +197,75 @@ StatusType GameSystem::averageHighestPlayerLevelByGroup(int GroupID, int m, doub
     return SUCCESS;
 }
 
+StatusType GameSystem::getPlayersBound(int GroupID, int score, int m, int * LowerBoundPlayers,
+                           int * HigherBoundPlayers)
+{
+    if (GroupID<0||GroupID>k||m<0||score<=0||score>scale)
+        return INVALID_INPUT;
+    if (m==0)
+    {
+        *LowerBoundPlayers = 0;
+        *HigherBoundPlayers = 0;
+        return SUCCESS;
+    }
+    if(score==6&&GroupID==0&&m==9)
+        int x =0;
+    if (GroupID==0)
+    {
+        if(m>num_of_players)
+            return FAILURE;
+        int lowest_level_to_check = levels_tree->findLowestLevelOutOfM(m);
+        int num_of_players_inbound_at_score = 0;
+        int num_of_players_at_min_at_score = 0;
+        int players_above_min_at_score = 0;
+        int total_of_players_at_min = 0;
+        int total_of_players_at_range = 0;
+        if(lowest_level_to_check == 0)
+        {
+            num_of_players_inbound_at_score = scale_levels_trees_arr[score]->getSize() + score_of_players_at_zero[score];
+            num_of_players_at_min_at_score = score_of_players_at_zero[score];
+            total_of_players_at_min = players_at_zero;
+            total_of_players_at_range = num_of_players;
+        }
+        else
+        {
+            num_of_players_inbound_at_score = scale_levels_trees_arr[score]->countDataAboveKey(lowest_level_to_check);
+            if(scale_levels_trees_arr[score]->findKey(lowest_level_to_check)!=nullptr)
+                num_of_players_at_min_at_score = scale_levels_trees_arr[score]->findKey(lowest_level_to_check)->getData();
+            total_of_players_at_min = levels_tree->findKey(lowest_level_to_check)->getData();
+            total_of_players_at_range = levels_tree->countDataAboveKey(lowest_level_to_check);
+        }
+        players_above_min_at_score = num_of_players_inbound_at_score - num_of_players_at_min_at_score;
+        int players_above_min = total_of_players_at_range - total_of_players_at_min;
+        m = m-players_above_min;
+        *LowerBoundPlayers = m - (total_of_players_at_min - num_of_players_at_min_at_score);
+        if(*LowerBoundPlayers<0)
+            *LowerBoundPlayers=0;
+        *LowerBoundPlayers+=players_above_min_at_score;
+        *HigherBoundPlayers = players_above_min_at_score + num_of_players_at_min_at_score;
+        return SUCCESS;
+    }
+    std::shared_ptr<Group> group = groups->find(GroupID);
+    if(GroupID==41)
+        int x=0;
+    return group->getPlayersBound(score, m, LowerBoundPlayers, HigherBoundPlayers);
+
+}
+
+
+/*
+int* num_of_players_inbound_by_scale = new int[scale+1];
+int* num_of_players_at_min_by_scale = new int[scale+1];
+
+for(int i=1;i<scale+1;i++)
+{
+    if(lowest_level_to_check==0)
+    {
+        num_of_players_inbound_by_scale[i] = scale_levels_trees_arr[i]->getSize();
+    }
+    num_of_players_inbound_by_scale[i] = scale_levels_trees_arr[i]->countDataAboveKey(lowest_level_to_check);
+    if(scale_levels_trees_arr[i]->findKey(lowest_level_to_check)!=nullptr)
+        num_of_players_at_min_by_scale[i] = scale_levels_trees_arr[i]->findKey(lowest_level_to_check)->getData();
+    else
+        num_of_players_at_min_by_scale[i]=0;
+}*/
