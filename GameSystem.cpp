@@ -44,6 +44,10 @@ StatusType GameSystem::addPlayer(int PlayerID, int GroupID, int score) {
 StatusType GameSystem::removePlayer(int PlayerID) {
     if (PlayerID<=0)
         return INVALID_INPUT;
+    if(PlayerID== 1255983752)
+    {
+        int x=0;
+    }
     std::shared_ptr<Player> player_to_remove = players->find(PlayerID);
     if(player_to_remove== nullptr)
     {
@@ -73,7 +77,7 @@ StatusType GameSystem::increasePlayerIDLevel(int PlayerID, int LevelIncrease) {
     {
         return  INVALID_INPUT;
     }
-    if(PlayerID == 1871945604)
+    if(PlayerID == 621292714)
         int x=0;
     if(!players->member(PlayerID))
     {
@@ -138,6 +142,12 @@ StatusType GameSystem::getPercentOfPlayersWithScoreInBounds(int GroupID, int sco
         return INVALID_INPUT;
     int num_of_players_with_score=0;
     int all_of_players=0;
+    if(score== 23)
+        int x= 0;
+    if(higherLevel<lowerLevel)
+    {
+        return FAILURE;
+    }
     if (GroupID==0)
     {
         all_of_players= levels_tree->getSumInBorder(lowerLevel, higherLevel);
@@ -170,7 +180,7 @@ StatusType GameSystem::averageHighestPlayerLevelByGroup(int GroupID, int m, doub
     {
         return INVALID_INPUT;
     }
-    if(m==27)
+    if(m==24 || m ==12)
     {
         int x=27;
     }

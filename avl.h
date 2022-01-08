@@ -658,6 +658,7 @@ Node<T, C>* Avltree<T, C>::removebinary(NodePtr node) {
         setNodeHeight(node);
         setNodeHeight(parent);
         delete node;
+        updateRanksIteration(parent);
         return parent;
     }
     if (node->HasOneSon() != nullptr) {
@@ -681,6 +682,7 @@ Node<T, C>* Avltree<T, C>::removebinary(NodePtr node) {
         setNodeHeight(node);
         setNodeHeight(parent);
         delete node;
+        updateRanksIteration(parent);
         return parent;
     }
     NodePtr new_root = getNextLeft(node);
@@ -734,18 +736,26 @@ Node<T, C>* Avltree<T, C>::removebinary(NodePtr node) {
     {
         root=new_root;
     }
+    node->removeTies();
     setNodeHeight(new_grandson);
     setNodeHeight(old_parent);
     setNodeHeight(new_right_son);
     setNodeHeight(new_root);
     setNodeHeight(new_parent);
+    updateRanksIteration(new_grandson);
+    updateRanksIteration(new_right_son);
+    if(!(old_parent->getKey()== node->getKey()))
+    {
+        updateRanksIteration(old_parent);
+    }
+    else
+    {
+        updateRanksIteration(new_root);
+    }
+    delete node;
     if (new_right_son != nullptr) {
-        node->removeTies();
-        delete node;
         return new_right_son;
     }
-    node->removeTies();
-    delete node;
     return new_root;
 }
 
@@ -761,6 +771,9 @@ void Avltree<T, C>::remove(C key) {
         return; /////
     }
     NodePtr node = removebinary(node_to_remove);
+    //if(node != nullptr){
+      //  updateRanksIteration(node);
+    //}
     if (node != nullptr) {
         roll(node, node->getBF());
         while (node->getParent() != nullptr) {// need to update the sum ?
@@ -885,7 +898,7 @@ void Avltree<T,C>::Merge(Avltree<T,C>* other)
         delete new_tree_arr[i];
     }
     delete []new_tree_arr;
-    std::cout<<"size of tree1: "<<size1<<" size of tree2: "<<size2<<" new size: "<<final_size<<std::endl;
+    //std::cout<<"size of tree1: "<<size1<<" size of tree2: "<<size2<<" new size: "<<final_size<<std::endl;
     if(size1<0 || size2<0 || size<0)
         int x=0;
 }
