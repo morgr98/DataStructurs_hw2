@@ -10,7 +10,6 @@
 
 class GameSystem {
     UnionFind<std::shared_ptr<Group>>* groups;
-    //Group* data_groups;
     HashTable<std::shared_ptr<Player>>* players;
     Avltree<int,int>* levels_tree;
     Avltree<int,int>** scale_levels_trees_arr;
@@ -23,7 +22,6 @@ public:
     GameSystem(int k, int scale): k(k), scale(scale), num_of_players(0), players_at_zero(0){
         groups = new UnionFind<std::shared_ptr<Group>>(k);
         players= new HashTable<std::shared_ptr<Player>>(100);
-        //data_groups= new Group[k+1];
         levels_tree = new Avltree<int,int>;
         scale_levels_trees_arr = new Avltree<int,int>*[scale+1];
         for (int i=0;i<scale+1;i++)
@@ -34,7 +32,6 @@ public:
         for (int i = 1; i <= k; ++i) {
             group = std::make_shared<Group>(i,scale);
             groups->makeSet(std::move(group),i);
-            //data_groups[i]=group;
         }
         score_of_players_at_zero = new int[scale+1];
         for (int i=0;i<scale+1;i++)
@@ -42,18 +39,7 @@ public:
             score_of_players_at_zero[i]=0;
         }
     }
-    /*GameSystem(GameSystem& other) = default;
-    *{
-        //not sure
-        k = other.k;
-        num_of_players = other.num_of_players;
-        scale = other.scale;
-        players_at_zero = other.players_at_zero;
-        groups = other.groups;
-        players = other.players;
-        scale_levels_trees_arr=other.scale_levels_trees_arr;
-        groups = other.groups;
-    }*/
+
     ~GameSystem(){
         delete players;
         delete levels_tree;

@@ -13,7 +13,6 @@ class Group {
     Avltree<int,int>* group_levels_tree;
     Avltree<int,int>** scale_levels_trees_arr;
     int* score_of_players_at_zero;
-    //HashTables<Player> players;
     int players_at_zero;
     int scale;
 

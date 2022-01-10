@@ -11,9 +11,6 @@ class Node {
     T data;
     T sum_subtree;
     T levels_sum;
-    //int scale;
-    //int* score_arr;
-    //int* score_subtree;
     Node<T, C>* parent;
     Node<T, C>* right;
     Node<T, C>* left;
@@ -23,8 +20,6 @@ public:
     Node(T data, C key) : key(key), data(data), sum_subtree(data), levels_sum(data*key), parent(nullptr),
     right(nullptr), left(nullptr), h(0) {};
     ~Node()
-        /*delete[] score_arr;
-        delete[] score_subtree;*/
      = default;
     void setKey(C key) {
         this->key = key;
@@ -161,24 +156,6 @@ public:
     {
         levels_sum = new_sum;
     }
-    /*
-    int getScale(){
-        return scale;
-    }
-    int getScoreCell(int i)
-    {
-        return score_arr[i];
-    }
-    void changeScoreCell(int i, int new_score)
-    {
-        score_arr[i]=new_score;
-    }
-
-    void changeSubScoreCell(int i, int new_score)
-    {
-        score_subtree[i]=new_score;
-    }
-     */
 };
 
 static int max(int a, int b) {
@@ -203,15 +180,7 @@ static void setNodeHeight(Node<T, C>* node) {
             node->setHeight(1 + max(getNodeHeight(node->getLeft()), getNodeHeight(node->getRight())));
     }
 }
-/*
-template<class T, class C>
-static int getScoreSubCell(Node<T, C>* node, int i)
-{
-    if (node == nullptr)
-        return 0;
-    return node->score_arr[i];
-}
-  */
+
 template<class T, class C>
 static int getSum(Node<T, C>* node){
     if (node==nullptr)
@@ -339,8 +308,6 @@ Node<T, C>* Avltree<T, C>::findKey(C key) {
 
 template<class T, class C>
 int Avltree<T, C>::insert(T data, C key) {
-    if (size<0)
-        int x=0;
     if (root == nullptr) {
         Node<T,C>* node = new Node<T,C>(data, key);
         root = node;
@@ -356,7 +323,6 @@ int Avltree<T, C>::insert(T data, C key) {
     }
     Node<T,C>* node = new Node<T,C>(data, key);
     size++;
-    //size++;
     NodePtr iterator = root;
     while (iterator != nullptr) {
         if (iterator->getKey() < key) {
@@ -388,14 +354,12 @@ int Avltree<T, C>::insert(T data, C key) {
         int p_height = p->getHeight();
         if (p_height >= it_height + 1)
         {
-            //size++;
             return 1;
         }
 
         p->setHeight(it_height + 1);
         if (p->getBF() >= 2 || p->getBF() <= -2) {
             roll(p, p->getBF());
-            //size++;
             return 1;
         }
         iterator = p;
@@ -409,22 +373,6 @@ void Avltree<T, C>::updateRanksIteration(Node<T, C>* node){
     {
         updateRanks(iterator);
         iterator = iterator->getParent();
-
-        /*
-       int new_sum=0;
-       int new_levels=0;
-
-       int new_score = 0;
-
-
-       //updating arr:
-       for (int i=0;i<scale;i++)
-       {
-           new_score += getScoreSubCell(iterator->getLeft(), i) + getScoreSubCell(iterator->getRight(), i) + iterator->getScoreCell(i);
-           iterator->changeScoreSuBCell(i, new_score);
-       }
-        */
-
     }
 
 }
@@ -656,7 +604,7 @@ Node<T, C>* Avltree<T, C>::removebinary(NodePtr node) {
         }
         NodePtr parent = node->getParent();
         node->removeTies();
-        //what's that for?
+
         setNodeHeight(node);
         setNodeHeight(parent);
         delete node;
@@ -770,23 +718,17 @@ void Avltree<T, C>::remove(C key) {
     if (node_to_remove->getData()>1){
         node_to_remove->setData(node_to_remove->getData()-1);
         updateRanksIteration(node_to_remove);
-        return; /////
+        return;
     }
     NodePtr node = removebinary(node_to_remove);
-    //if(node != nullptr){
-      //  updateRanksIteration(node);
-    //}
     if (node != nullptr) {
         roll(node, node->getBF());
-        while (node->getParent() != nullptr) {// need to update the sum ?
+        while (node->getParent() != nullptr) {
             node = node->getParent();
             roll(node, node->getBF());
         }
     }
     size--;
-    if(size <0)
-        int x =0;
-
 }
 
 template<class T, class C>
@@ -838,8 +780,6 @@ void Avltree<T,C>::Merge(Avltree<T,C>* other)
     Node<T,C>** other_nodes = new Node<T,C>*[size2];
     Node<T,C>** new_tree_arr = new Node<T,C>*[size1+size2];
 
-    //T* tree_datas= new T[size1];
-    //T* other_tree= new T[size2];
     inorder(this->root,tree_nodes,0,size1);
     inorder(other->root ,other_nodes,0,size2);
     int c1 = 0, c2 = 0, double_counter = 0;
@@ -847,7 +787,6 @@ void Avltree<T,C>::Merge(Avltree<T,C>* other)
     while(c1 != size1 && c2 != size2)
     {
         if (tree_nodes[c1]->getKey() > other_nodes[c2]->getKey()) {
-            //delete new_tree_arr[c1+c2];
             new_tree_arr[c1 + c2 - double_counter] = new Node<T,C>(other_nodes[c2]->getData(), other_nodes[c2]->getKey());
             c2++;
             final_size++;
@@ -873,7 +812,6 @@ void Avltree<T,C>::Merge(Avltree<T,C>* other)
         final_size++;
     }
     while (c2 != size2) {
-        //delete new_tree_arr[c1+c2];
         new_tree_arr[c1 + c2-double_counter] = new Node<T,C>(other_nodes[c2]->getData(), other_nodes[c2]->getKey());
         c2++;
         final_size++;
@@ -882,8 +820,6 @@ void Avltree<T,C>::Merge(Avltree<T,C>* other)
     {
         new_tree_arr[i]->removeTies();
     }
-    if(final_size>=3)
-        int temp = new_tree_arr[2]->getKey();
     this->destroy();
     makeATree(new_tree_arr,0,final_size-1);
     other->destroy();
@@ -896,9 +832,6 @@ void Avltree<T,C>::Merge(Avltree<T,C>* other)
         delete new_tree_arr[i];
     }
     delete []new_tree_arr;
-    //std::cout<<"size of tree1: "<<size1<<" size of tree2: "<<size2<<" new size: "<<final_size<<std::endl;
-    if(size1<0 || size2<0 || size<0)
-        int x=0;
 }
 
 template<class T, class C>

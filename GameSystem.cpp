@@ -1,22 +1,17 @@
 
 
 #include "GameSystem.h"
+static int min(int a, int b);
 
 StatusType GameSystem::mergeGroups(int GroupID1, int GroupID2)
 {
     if (GroupID1<=0 || GroupID2<=0 || GroupID1>k || GroupID2>k)
         return INVALID_INPUT;
-  //  if(GroupID1==39&&GroupID2==5)
-  //      std::cout<<"here";
     groups->Union(GroupID1, GroupID2);
     return SUCCESS;
 }
 
 StatusType GameSystem::addPlayer(int PlayerID, int GroupID, int score) {
-   // if(GroupID== 23)
-  //  {
-  //      std::cout<<"h";
-  //  }
     if(PlayerID<=0 || score<=0|| score >scale || GroupID<= 0 || GroupID>k){
         return INVALID_INPUT;
     }
@@ -44,10 +39,6 @@ StatusType GameSystem::addPlayer(int PlayerID, int GroupID, int score) {
 StatusType GameSystem::removePlayer(int PlayerID) {
     if (PlayerID<=0)
         return INVALID_INPUT;
-    if(PlayerID== 1255983752)
-    {
-        int x=0;
-    }
     std::shared_ptr<Player> player_to_remove = players->find(PlayerID);
     if(player_to_remove== nullptr)
     {
@@ -69,6 +60,7 @@ StatusType GameSystem::removePlayer(int PlayerID) {
         scale_levels_trees_arr[score]->remove(level);
     }
     num_of_players--;
+    players->remove(PlayerID);
     return SUCCESS;
 }
 
@@ -77,8 +69,6 @@ StatusType GameSystem::increasePlayerIDLevel(int PlayerID, int LevelIncrease) {
     {
         return  INVALID_INPUT;
     }
-    if(PlayerID == 621292714)
-        int x=0;
     if(!players->member(PlayerID))
     {
         return FAILURE;
@@ -104,10 +94,6 @@ StatusType GameSystem::increasePlayerIDLevel(int PlayerID, int LevelIncrease) {
 }
 
 StatusType GameSystem::changePlayerIDScore(int PlayerID, int NewScore) {
-   // if(PlayerID==1773324543)
-  //  {
-   //     std::cout<<"h";
-   // }
     if(NewScore<=0 || NewScore > scale || PlayerID<=0)
     {
         return INVALID_INPUT;
@@ -197,6 +183,11 @@ StatusType GameSystem::averageHighestPlayerLevelByGroup(int GroupID, int m, doub
     return SUCCESS;
 }
 
+static int min(int a, int b)
+{
+    return a>b ? b :a;
+}
+
 StatusType GameSystem::getPlayersBound(int GroupID, int score, int m, int * LowerBoundPlayers,
                            int * HigherBoundPlayers)
 {
@@ -208,8 +199,6 @@ StatusType GameSystem::getPlayersBound(int GroupID, int score, int m, int * Lowe
         *HigherBoundPlayers = 0;
         return SUCCESS;
     }
-    if(score==6&&GroupID==0&&m==9)
-        int x =0;
     if (GroupID==0)
     {
         if(m>num_of_players)
@@ -222,7 +211,10 @@ StatusType GameSystem::getPlayersBound(int GroupID, int score, int m, int * Lowe
         int total_of_players_at_range = 0;
         if(lowest_level_to_check == 0)
         {
-            num_of_players_inbound_at_score = scale_levels_trees_arr[score]->getSize() + score_of_players_at_zero[score];
+            if(scale_levels_trees_arr[score]->getRoot() != nullptr)
+                num_of_players_inbound_at_score = scale_levels_trees_arr[score]->getRoot()->getSum() + score_of_players_at_zero[score];
+            else
+                num_of_players_inbound_at_score=score_of_players_at_zero[score];
             num_of_players_at_min_at_score = score_of_players_at_zero[score];
             total_of_players_at_min = players_at_zero;
             total_of_players_at_range = num_of_players;
@@ -242,30 +234,11 @@ StatusType GameSystem::getPlayersBound(int GroupID, int score, int m, int * Lowe
         if(*LowerBoundPlayers<0)
             *LowerBoundPlayers=0;
         *LowerBoundPlayers+=players_above_min_at_score;
-        *HigherBoundPlayers = players_above_min_at_score + num_of_players_at_min_at_score;
+        *HigherBoundPlayers = players_above_min_at_score +min(m, num_of_players_at_min_at_score);
         return SUCCESS;
     }
     std::shared_ptr<Group> group = groups->find(GroupID);
-    if(GroupID==41)
-        int x=0;
     return group->getPlayersBound(score, m, LowerBoundPlayers, HigherBoundPlayers);
 
 }
 
-
-/*
-int* num_of_players_inbound_by_scale = new int[scale+1];
-int* num_of_players_at_min_by_scale = new int[scale+1];
-
-for(int i=1;i<scale+1;i++)
-{
-    if(lowest_level_to_check==0)
-    {
-        num_of_players_inbound_by_scale[i] = scale_levels_trees_arr[i]->getSize();
-    }
-    num_of_players_inbound_by_scale[i] = scale_levels_trees_arr[i]->countDataAboveKey(lowest_level_to_check);
-    if(scale_levels_trees_arr[i]->findKey(lowest_level_to_check)!=nullptr)
-        num_of_players_at_min_by_scale[i] = scale_levels_trees_arr[i]->findKey(lowest_level_to_check)->getData();
-    else
-        num_of_players_at_min_by_scale[i]=0;
-}*/

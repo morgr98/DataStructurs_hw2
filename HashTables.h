@@ -67,19 +67,7 @@ public:
     {
         this->destroy();
     }
-    HashTable(HashTable<T>& hashtable)=default;/*{
-        m=hashtable.m;
-        arr_size = hashtable.arr_size;
-        curr_size=hashtable.curr_size;
-        top_threshold=hashtable.top_threshold;
-        bottom_threshold=hashtable.bottom_threshold;
-        min_size=hashtable.min_size;
-        for(int i=0;i<arr_size;i++)
-        {
-            chain[i] = hashtable.chain[i];
-        }
-    }*/
-    void newUpdate(int arr_size);
+    HashTable(HashTable<T>& hashtable)=default;
     void destroy();
     bool member(int key);
     T find(int key);
@@ -107,19 +95,6 @@ void HashTable<T>::destroy()
     delete[] chain;
 }
 
-template<class T>
-void HashTable<T>::newUpdate(int arr_size1) {
-    m=arr_size1-1;
-    arr_size=arr_size1;
-    min_size=arr_size1;
-    curr_size=0;
-    top_threshold = 1;
-    bottom_threshold = 0.5;
-    chain = new NodeHT<T>*[arr_size];
-    for (int i = 0; i < arr_size; ++i) {
-        chain[i]= nullptr;
-    }
-}
 
 template<class T>
 bool HashTable<T>::member(int key) {

@@ -4,7 +4,7 @@
 
 #include "Group.h"
 #include <iostream>
-
+static int min(int a, int b);
 int Group::getGroupId() {
     return group_id;
 }
@@ -22,10 +22,6 @@ Avltree<int,int>* Group::getPlayersTree()
 }
 void Group::Merge(std::shared_ptr<Group> other_group)
 {
-   // if (group_id== 38)
-  //  {
-  //      std::cout<<"h";
-  //  }
     num_of_players = num_of_players+other_group->getNumPlayers();
     players_at_zero = players_at_zero + other_group->getPlayersAtZero();
     for(int i=0;i<scale+1;i++)
@@ -33,14 +29,6 @@ void Group::Merge(std::shared_ptr<Group> other_group)
         score_of_players_at_zero[i] += other_group->score_of_players_at_zero[i];
         scale_levels_trees_arr[i]->Merge(other_group->scale_levels_trees_arr[i]);
     }
- //   if(other_group->getGroupId()==1)
-  //  {
-   //     std::cout<<"here";
-   // }
-   // if(num_of_players- players_at_zero>0)
-   // {
-  //      std::cout<<"h";
-  //  }
     group_levels_tree->Merge(other_group->getPlayersTree());
 }
 void Group::addPlayer(int level_player, int score)
@@ -80,13 +68,9 @@ void Group::increasePlayerLevel(int old_level, int new_level, int score) {
         score_of_players_at_zero[score]--;
     }
     else{
-        if (old_level == 1 && new_level == 5)
-            int x =0;
         group_levels_tree->remove(old_level);
         scale_levels_trees_arr[score]->remove(old_level);
     }
-    if(group_levels_tree->size!=0)
-        int x =0;
     group_levels_tree->insert(1,new_level);
     scale_levels_trees_arr[score]->insert(1,new_level);
 }
@@ -145,6 +129,11 @@ StatusType Group::averageHighestPlayerLevelByGroup(int m, double *avgLevel) {
     return SUCCESS;
 }
 
+static int min(int a, int b)
+{
+    return a>b ? b :a;
+}
+
 StatusType Group::getPlayersBound(int score, int m, int * LowerBoundPlayers,
                                        int * HigherBoundPlayers)
 {
@@ -158,7 +147,10 @@ StatusType Group::getPlayersBound(int score, int m, int * LowerBoundPlayers,
     int total_of_players_at_range = 0;
     if(lowest_level_to_check == 0)
     {
-        num_of_players_inbound_at_score = scale_levels_trees_arr[score]->getSize() + score_of_players_at_zero[score];
+        if(scale_levels_trees_arr[score]->getRoot() != nullptr)
+            num_of_players_inbound_at_score = scale_levels_trees_arr[score]->getRoot()->getSum() + score_of_players_at_zero[score];
+        else
+            num_of_players_inbound_at_score=score_of_players_at_zero[score];
         num_of_players_at_min_at_score = score_of_players_at_zero[score];
         total_of_players_at_min = players_at_zero;
         total_of_players_at_range = num_of_players;
@@ -178,8 +170,6 @@ StatusType Group::getPlayersBound(int score, int m, int * LowerBoundPlayers,
     if(*LowerBoundPlayers<0)
         *LowerBoundPlayers=0;
     *LowerBoundPlayers+=players_above_min_at_score;
-    *HigherBoundPlayers = players_above_min_at_score + num_of_players_at_min_at_score;
-    if(*LowerBoundPlayers==0 && *HigherBoundPlayers==1)
-        int x=0;
+    *HigherBoundPlayers = players_above_min_at_score + min(m,num_of_players_at_min_at_score);
     return SUCCESS;
 }

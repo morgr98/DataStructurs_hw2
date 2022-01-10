@@ -150,7 +150,10 @@ int main(int argc, const char**argv){
 GameSystem game(10, 5);
 
     game.addPlayer(1,1,1);
+    game.addPlayer(1,3,3);
     game.addPlayer(2,1,1);
+    game.removePlayer(1);
+    game.addPlayer(1,3,3);
     game.addPlayer(3,3,2);
     game.addPlayer(1,1,1);
     game.addPlayer(4,2,2);
