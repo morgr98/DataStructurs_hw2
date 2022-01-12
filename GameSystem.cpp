@@ -37,6 +37,7 @@ StatusType GameSystem::addPlayer(int PlayerID, int GroupID, int score) {
 }
 
 StatusType GameSystem::removePlayer(int PlayerID) {
+    try{
     if (PlayerID<=0)
         return INVALID_INPUT;
     std::shared_ptr<Player> player_to_remove = players->find(PlayerID);
@@ -62,9 +63,13 @@ StatusType GameSystem::removePlayer(int PlayerID) {
     num_of_players--;
     players->remove(PlayerID);
     return SUCCESS;
+    }
+    catch(std::bad_alloc&)
+    {return ALLOCATION_ERROR;}
 }
 
 StatusType GameSystem::increasePlayerIDLevel(int PlayerID, int LevelIncrease) {
+    try {
     if(PlayerID<= 0 || LevelIncrease<=0)
     {
         return  INVALID_INPUT;
@@ -91,39 +96,42 @@ StatusType GameSystem::increasePlayerIDLevel(int PlayerID, int LevelIncrease) {
     scale_levels_trees_arr[player->getScore()]->insert(1,player->getLevel());
     levels_tree->insert(1,player->getLevel());
     return SUCCESS;
+    }
+    catch (std::bad_alloc&)
+    {return ALLOCATION_ERROR;}
 }
 
 StatusType GameSystem::changePlayerIDScore(int PlayerID, int NewScore) {
-    if(NewScore<=0 || NewScore > scale || PlayerID<=0)
-    {
-        return INVALID_INPUT;
+    try {
+        if (NewScore <= 0 || NewScore > scale || PlayerID <= 0) {
+            return INVALID_INPUT;
+        }
+        if (!players->member(PlayerID)) {
+            return FAILURE;
+        }
+        std::shared_ptr<Player> player = players->find(PlayerID);
+        std::shared_ptr<Group> group = groups->find(player->getGroupId());
+        int old_score = player->getScore();
+        int level = player->getLevel();
+        group->changePlayerScore(old_score, NewScore, level);
+        player->updateScore(NewScore);
+        if (level == 0) {
+            score_of_players_at_zero[old_score]--;
+            score_of_players_at_zero[NewScore]++;
+        } else {
+            scale_levels_trees_arr[old_score]->remove(player->getLevel());
+            scale_levels_trees_arr[NewScore]->insert(1, player->getLevel());
+        }
+        return SUCCESS;
     }
-    if(!players->member(PlayerID))
-    {
-        return FAILURE;
-    }
-    std::shared_ptr<Player> player= players->find(PlayerID);
-    std::shared_ptr<Group> group= groups->find(player->getGroupId());
-    int old_score= player->getScore();
-    int level = player->getLevel();
-    group->changePlayerScore(old_score, NewScore, level);
-    player->updateScore(NewScore);
-    if(level==0)
-    {
-        score_of_players_at_zero[old_score]--;
-        score_of_players_at_zero[NewScore]++;
-    }
-    else
-    {
-        scale_levels_trees_arr[old_score]->remove(player->getLevel());
-        scale_levels_trees_arr[NewScore]->insert(1,player->getLevel());
-    }
-    return SUCCESS;
+    catch (std::bad_alloc&)
+    {return ALLOCATION_ERROR;}
 }
 
 StatusType GameSystem::getPercentOfPlayersWithScoreInBounds(int GroupID, int score, int lowerLevel, int higherLevel,
                                                             double *players)
 {
+    try{
     if(GroupID<0||GroupID>k||players==nullptr)
         return INVALID_INPUT;
     int num_of_players_with_score=0;
@@ -157,9 +165,13 @@ StatusType GameSystem::getPercentOfPlayersWithScoreInBounds(int GroupID, int sco
     }
     std::shared_ptr<Group> group = groups->find(GroupID);
     return group->getPercentOfPlayersWithScoreInBounds(score, lowerLevel, higherLevel, players);
+    }
+    catch(std::bad_alloc&)
+    {return ALLOCATION_ERROR;}
 }
 
 StatusType GameSystem::averageHighestPlayerLevelByGroup(int GroupID, int m, double *avgLevel) {
+    try{
     if(GroupID>k || GroupID <0 || m<=0)
     {
         return INVALID_INPUT;
@@ -181,6 +193,9 @@ StatusType GameSystem::averageHighestPlayerLevelByGroup(int GroupID, int m, doub
     double sum= levels_tree->getHighestSumLevel(num);
     *avgLevel= (double (sum/m));
     return SUCCESS;
+    }
+    catch(std::bad_alloc&)
+    {return ALLOCATION_ERROR;}
 }
 
 static int min(int a, int b)
@@ -191,6 +206,7 @@ static int min(int a, int b)
 StatusType GameSystem::getPlayersBound(int GroupID, int score, int m, int * LowerBoundPlayers,
                            int * HigherBoundPlayers)
 {
+    try{
     if (GroupID<0||GroupID>k||m<0||score<=0||score>scale)
         return INVALID_INPUT;
     if (m==0)
@@ -239,6 +255,8 @@ StatusType GameSystem::getPlayersBound(int GroupID, int score, int m, int * Lowe
     }
     std::shared_ptr<Group> group = groups->find(GroupID);
     return group->getPlayersBound(score, m, LowerBoundPlayers, HigherBoundPlayers);
-
+    }
+    catch(std::bad_alloc&)
+    {return ALLOCATION_ERROR;}
 }
 
